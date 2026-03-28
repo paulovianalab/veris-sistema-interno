@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const token = request.cookies.get("veris_auth_token")?.value;
   const isLoginPage = request.nextUrl.pathname.startsWith("/login");
 
@@ -20,6 +20,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Protect all routes except static files, api internals and the login image/files if needed
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|logo-veris.png).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon\\.ico|logo-veris\\.png|favicon\\.png).*)"],
 };
