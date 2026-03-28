@@ -18,8 +18,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await prisma.setting.findUnique({ where: { id: "global" } });
-  const agencyName = settings?.agencyName || "Veris Digital";
+  let agencyName = "Veris Digital";
+  try {
+    const settings = await prisma.setting.findUnique({ where: { id: "global" } });
+    agencyName = settings?.agencyName || "Veris Digital";
+  } catch {
+    // fallback to default if DB unavailable during build
+  }
 
   return (
     <html lang="pt-BR" className="h-full antialiased dark transition-colors duration-300">
