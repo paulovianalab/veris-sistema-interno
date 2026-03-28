@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/components";
 import { Users, FileText, CheckSquare, Target, TrendingUp, Calendar } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage() {
   const [clients, tasks] = await Promise.all([
     prisma.client.findMany({ orderBy: { createdAt: 'desc' } }),

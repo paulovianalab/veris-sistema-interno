@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import AgendaGrid from "@/components/AgendaGrid";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AgendaPage() {
   const events = await prisma.event.findMany({
     orderBy: { date: "asc" }

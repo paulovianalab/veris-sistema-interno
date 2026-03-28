@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import TarefasGrid from "@/components/TarefasGrid";
 
+export const dynamic = 'force-dynamic';
+
 export default async function TarefasPage() {
   const [pendingTasks, completedTasks, clients] = await Promise.all([
     prisma.task.findMany({

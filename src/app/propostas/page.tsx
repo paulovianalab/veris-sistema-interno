@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import PropostasGrid from "@/components/PropostasGrid";
 
+export const dynamic = 'force-dynamic';
+
 export default async function PropostasPage() {
   const [proposals, clients] = await Promise.all([
     prisma.proposal.findMany({

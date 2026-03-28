@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import NotasGrid from "@/components/NotasGrid";
 
+export const dynamic = 'force-dynamic';
+
 export default async function NotasPage() {
   const notes = await prisma.note.findMany({
     orderBy: { createdAt: "desc" }
