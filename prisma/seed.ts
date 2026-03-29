@@ -10,9 +10,8 @@ async function main() {
       name: "João Silva",
       company: "Alpha Comércio Ltda",
       type: "Ativo",
-      responsible: "Ana Lima",
       monthlyValue: 3500,
-      tags: JSON.stringify(["Consultoria", "Gestão"]),
+      instagram: "@alpha_comercio"
     }
   });
 
@@ -21,9 +20,8 @@ async function main() {
       name: "Maria Santos",
       company: "Beta Solutions",
       type: "Proposta",
-      responsible: "Carlos Mendes",
       monthlyValue: 5000,
-      tags: JSON.stringify(["Desenvolvimento"]),
+      instagram: "@betasolutions"
     }
   });
 
@@ -32,9 +30,7 @@ async function main() {
       name: "Tech Corp",
       company: "Tech Corp",
       type: "Negociação",
-      responsible: "João Silva",
       monthlyValue: 12000,
-      tags: JSON.stringify(["Enterprise"]),
     }
   });
 
@@ -43,9 +39,7 @@ async function main() {
       name: "Novo Lead",
       company: "Startup XYZ",
       type: "Lead",
-      responsible: "Ana Lima",
       monthlyValue: 0,
-      tags: JSON.stringify([]),
     }
   });
 
@@ -56,7 +50,6 @@ async function main() {
       status: "Pendente",
       date: new Date(),
       clientId: client1.id,
-      owner: "Ana Lima"
     }
   });
 
@@ -67,7 +60,6 @@ async function main() {
       status: "Pendente",
       date: new Date(new Date().getTime() + 86400000), // tomorrow
       clientId: client2.id,
-      owner: "Carlos Mendes"
     }
   });
 
