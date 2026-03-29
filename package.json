@@ -11,8 +11,6 @@
     "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@libsql/client": "^0.8.0",
-    "@prisma/adapter-libsql": "^5.21.0",
     "@prisma/client": "^5.21.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
