@@ -20,12 +20,24 @@ export default function Error({
             {error.message}
           </p>
         )}
-        <button
-          onClick={reset}
-          className="mt-4 px-6 py-3 bg-primary text-white rounded-2xl font-black text-sm hover:scale-105 transition-transform"
-        >
-          Tentar novamente
-        </button>
+        <div className="flex flex-col gap-3 mt-6">
+          <button
+            onClick={reset}
+            className="px-6 py-3 bg-primary text-white rounded-2xl font-black text-sm hover:scale-105 transition-transform"
+          >
+            Tentar novamente
+          </button>
+          
+          <a
+            href="/api/setup-db"
+            className="px-6 py-3 bg-card border border-border text-foreground rounded-2xl font-black text-sm hover:bg-muted transition-colors flex items-center justify-center gap-2"
+          >
+            🔧 Inicializar Banco de Dados
+          </a>
+        </div>
+        <p className="text-xs text-muted-foreground font-bold mt-4 opacity-70">
+          Dica: Se você acabou de publicar o projeto, clique em Inicializar Banco de Dados para criar as tabelas no Turso.
+        </p>
       </div>
     </div>
   );
