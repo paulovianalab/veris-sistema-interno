@@ -129,17 +129,6 @@ export default function TaskModal({ isOpen, onClose, task, clients }: TaskModalP
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Responsável</label>
-            <input 
-              name="owner" 
-              defaultValue={task?.owner} 
-              required
-              placeholder="Ex: Veris Admin"
-              className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-black"
-            />
-          </div>
-
           {error && <p className="text-sm text-rose-500 bg-rose-500/10 p-4 rounded-2xl border border-rose-500/20 font-bold">{error}</p>}
 
           <div className="pt-6 flex items-center justify-between gap-4">

@@ -124,25 +124,26 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
                 <span className="text-muted-foreground font-black uppercase tracking-widest">Contato</span>
                 <span className="text-foreground font-black tracking-tight">{client.name}</span>
               </div>
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-muted-foreground font-black uppercase tracking-widest">Responsável</span>
-                <span className="text-foreground font-black tracking-tight">{client.responsible}</span>
-              </div>
               <div className="flex justify-between items-center text-xs border-t border-border/50 pt-3">
-                <span className="text-muted-foreground font-black uppercase tracking-widest">Valor Mensal</span>
+                <span className="text-muted-foreground font-black uppercase tracking-widest">Fee Mensal</span>
                 <span className="text-emerald-500 font-extrabold text-base tracking-tighter">
                   R$ {client.monthlyValue.toLocaleString('pt-BR')}
                 </span>
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 mt-auto pt-2">
-              {JSON.parse(client.tags || "[]").map((t: string) => (
-                <span key={t} className="px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider bg-muted text-muted-foreground border border-border group-hover:border-primary/20 transition-colors">
-                  {t}
-                </span>
-              ))}
-            </div>
+            {client.instagram && (
+              <div className="mt-auto pt-2 overflow-hidden text-center">
+                <a 
+                  href={`https://instagram.com/${client.instagram.replace('@', '')}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-block w-full py-2.5 rounded-xl bg-gradient-to-tr from-primary/10 to-primary/5 border border-primary/20 text-primary hover:bg-primary/20 transition-all font-black uppercase tracking-widest text-[10px] shadow-sm"
+                >
+                  Ver Instagram
+                </a>
+              </div>
+            )}
           </div>
         ))}
       </div>

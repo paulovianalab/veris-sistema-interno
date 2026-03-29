@@ -101,34 +101,24 @@ export default function ClientModal({ isOpen, onClose, client }: ClientModalProp
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Responsável</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Instagram (@empresa)</label>
               <input 
-                name="responsible" 
-                defaultValue={client?.responsible} 
-                required
-                placeholder="Ex: Ana Lima"
+                name="instagram" 
+                defaultValue={client?.instagram} 
+                placeholder="Ex: @veris_agency"
                 className="w-full h-11 bg-background border border-border rounded-xl px-4 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-bold"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Valor Mensal (R$)</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Fee Mensal (R$)</label>
             <input 
               name="monthlyValue" 
               type="number" 
               step="0.01" 
               defaultValue={client?.monthlyValue || 0} 
               className="w-full h-11 bg-background border border-border rounded-xl px-4 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-black"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Tags (JSON)</label>
-            <input 
-              name="tags" 
-              defaultValue={client?.tags || "[]"} 
-              className="w-full h-11 bg-background border border-border rounded-xl px-4 text-foreground text-xs font-bold focus:ring-2 focus:ring-primary/50 outline-none font-mono"
             />
           </div>
 

@@ -91,18 +91,16 @@ export async function createClientAction(formData: FormData) {
   const name = formData.get("name") as string;
   const company = formData.get("company") as string;
   const type = formData.get("type") as string;
-  const responsible = formData.get("responsible") as string;
   const monthlyValue = parseFloat((formData.get("monthlyValue") as string) || "0");
-  const tagsStr = formData.get("tags") as string || "[]";
+  const instagram = formData.get("instagram") as string;
 
   await prisma.client.create({
     data: {
       name,
       company,
       type,
-      responsible,
       monthlyValue,
-      tags: tagsStr,
+      instagram,
     },
   });
 
@@ -115,9 +113,8 @@ export async function updateClientAction(id: string, formData: FormData) {
   const name = formData.get("name") as string;
   const company = formData.get("company") as string;
   const type = formData.get("type") as string;
-  const responsible = formData.get("responsible") as string;
   const monthlyValue = parseFloat((formData.get("monthlyValue") as string) || "0");
-  const tagsStr = formData.get("tags") as string || "[]";
+  const instagram = formData.get("instagram") as string;
 
   await prisma.client.update({
     where: { id },
@@ -125,9 +122,8 @@ export async function updateClientAction(id: string, formData: FormData) {
       name,
       company,
       type,
-      responsible,
       monthlyValue,
-      tags: tagsStr,
+      instagram,
     },
   });
 
@@ -154,7 +150,6 @@ export async function createTaskAction(formData: FormData) {
   const dateStr = formData.get("date") as string;
   const date = dateStr ? new Date(dateStr) : new Date();
   const clientId = formData.get("clientId") as string;
-  const owner = formData.get("owner") as string;
 
   await prisma.task.create({
     data: {
@@ -163,7 +158,6 @@ export async function createTaskAction(formData: FormData) {
       status,
       date,
       clientId: clientId || null,
-      owner,
     },
   });
 
@@ -179,7 +173,6 @@ export async function updateTaskAction(id: string, formData: FormData) {
   const dateStr = formData.get("date") as string;
   const date = dateStr ? new Date(dateStr) : new Date();
   const clientId = formData.get("clientId") as string;
-  const owner = formData.get("owner") as string;
 
   await prisma.task.update({
     where: { id },
@@ -189,7 +182,6 @@ export async function updateTaskAction(id: string, formData: FormData) {
       status,
       date,
       clientId: clientId || null,
-      owner,
     },
   });
 

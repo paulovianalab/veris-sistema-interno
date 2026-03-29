@@ -15,9 +15,8 @@ model Client {
   name         String
   company      String?
   type         String     // e.g. "Ativo", "Negociação", "Proposta", "Lead", "Inativo"
-  responsible  String
   monthlyValue Float
-  tags         String     @default("[]") // JSON string for simplicity with SQLite
+  instagram    String?    // Link ou @ do Instagram
   tasks        Task[]
   proposals    Proposal[]
   createdAt    DateTime   @default(now())
@@ -32,7 +31,6 @@ model Task {
   date        DateTime
   clientId    String?
   client      Client?  @relation(fields: [clientId], references: [id])
-  owner       String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
