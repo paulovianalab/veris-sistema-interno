@@ -1,4 +1,5 @@
-import { PrismaClient } from '../generated';
+// Importação direta para evitar conflito com Turbopack (não resolve exports de diretórios locais)
+import { PrismaClient } from '../generated/index';
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { createClient } from "@libsql/client";
 
