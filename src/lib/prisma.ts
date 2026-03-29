@@ -17,8 +17,10 @@ const prismaClientSingleton = () => {
   if (process.env.NODE_ENV === 'production') {
      console.warn("⚠️ AVISO: Variáveis TURSO_DATABASE_URL ausentes no ambiente de produção Vercel.");
      return new PrismaClient({
-       datasourceUrl: "file:./dummy.db"
-     });
+       datasources: {
+         db: { url: "file:./dummy.db" }
+       }
+     } as any);
   }
 
   // Development only: Use local SQLite
