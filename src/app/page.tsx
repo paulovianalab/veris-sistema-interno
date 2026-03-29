@@ -6,15 +6,22 @@ import { Users, FileText, CheckSquare, Target, TrendingUp, Calendar } from "luci
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
-  const [clients, tasks] = await Promise.all([
-    prisma.client.findMany({ orderBy: { createdAt: 'desc' } }),
-    prisma.task.findMany({
-      where: { status: "Pendente" },
-      orderBy: { date: 'asc' },
-      take: 5,
-      include: { client: true }
-    })
-  ]);
+  let clients: any[] = [];
+  let tasks: any[] = [];
+
+  try {
+    [clients, tasks] = await Promise.all([
+      prisma.client.findMany({ orderBy: { createdAt: 'desc' } }),
+      prisma.task.findMany({
+        where: { status: "Pendente" },
+        orderBy: { date: 'asc' },
+        take: 5,
+        include: { client: true }
+      })
+    ]);
+  } catch (err) {
+    console.error("Erro ao carregar dados do dashboard:", err);
+  }
 
   const activeClients = clients.filter(c => c.type === "Ativo").length;
   const negotiatingClients = clients.filter(c => c.type === "Negociação").length;
