@@ -16,8 +16,9 @@ const prismaClientSingleton = () => {
   // Fallback seguro caso as variáveis do Turso não estejam no Vercel ainda
   if (process.env.NODE_ENV === 'production') {
      console.warn("⚠️ AVISO: Variáveis TURSO_DATABASE_URL ausentes no ambiente de produção Vercel.");
-     // Retorna um cliente prisma padrão genérico que usa DATABASE_URL, se existir (ou falha com mensagem mais limpa)
-     return new PrismaClient();
+     return new PrismaClient({
+       datasourceUrl: "file:./dummy.db"
+     });
   }
 
   // Development only: Use local SQLite
