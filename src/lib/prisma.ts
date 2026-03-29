@@ -10,7 +10,10 @@ const prismaClientSingleton = () => {
       authToken: process.env.TURSO_AUTH_TOKEN,
     });
     const adapter = new PrismaLibSql(libsql as any);
-    return new PrismaClient({ adapter } as any);
+    return new PrismaClient({ 
+      adapter,
+      datasources: { db: { url: "file:./dummy.db" } }
+    } as any);
   }
 
   // Fallback seguro caso as variáveis do Turso não estejam no Vercel ainda
