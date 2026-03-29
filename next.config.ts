@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  env: {
-    DATABASE_URL: "file:./dummy.db",
-  },
+  /* config options here */
 };
 
 export default nextConfig;
