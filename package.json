@@ -11,24 +11,21 @@
     "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@libsql/client": "^0.17.2",
-    "@prisma/adapter-libsql": "^7.6.0",
-    "@prisma/client": "^7.6.0",
+    "@libsql/client": "^0.8.0",
+    "@prisma/adapter-libsql": "^5.21.0",
+    "@prisma/client": "^5.21.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.7.0",
     "next": "16.2.1",
-    "prisma": "^7.6.0",
+    "prisma": "^5.21.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.6.0",
     "@tailwindcss/postcss": "^4",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
-    "better-sqlite3": "^12.8.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "dotenv": "^17.3.1",

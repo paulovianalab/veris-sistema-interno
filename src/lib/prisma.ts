@@ -18,18 +18,8 @@ const prismaClientSingleton = () => {
      return new PrismaClient();
   }
 
-  // Development only: Use local SQLite
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const Database = require("better-sqlite3");
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const path = require("path") as typeof import("path");
-  
-  const dbPath = path.join(process.cwd(), "dev.db");
-  const sqlite = new Database(dbPath);
-  const adapter = new PrismaBetterSqlite3(sqlite);
-  return new PrismaClient({ adapter } as any);
+  // Development only: Use Prisma SQLite Native
+  return new PrismaClient();
 };
 
 declare global {
