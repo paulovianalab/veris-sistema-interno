@@ -6,6 +6,9 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 export const metadata: Metadata = {
   title: "Veris Dashboard",
   description: "Internal CRM and Task Management Dashboard",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 import prisma from "@/lib/prisma";
