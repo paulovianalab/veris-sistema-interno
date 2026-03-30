@@ -122,116 +122,116 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-card border border-border w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between p-6 border-b border-border bg-muted/20">
-          <h2 className="text-xl font-light text-foreground flex items-center gap-3">
-            <CalIcon className="h-6 w-6 text-primary" /> {event ? "Compromisso" : "Agendar Evento"}
-          </h2>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
-            <X className="h-6 w-6" />
-          </button>
-        </div>
+   return (
+     <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+       <div className="bg-card border border-border w-full max-w-sm sm:max-w-md lg:max-w-lg h-screen sm:h-auto sm:max-h-[90vh] rounded-3xl shadow-2xl overflow-y-auto sm:overflow-visible animate-in zoom-in-95 duration-200 flex flex-col">
+         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border bg-muted/20 flex-shrink-0">
+           <h2 className="text-lg sm:text-xl font-light text-foreground flex items-center gap-2 sm:gap-3">
+             <CalIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" /> {event ? "Compromisso" : "Agendar Evento"}
+           </h2>
+           <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0">
+             <X className="h-5 w-5 sm:h-6 sm:w-6" />
+           </button>
+         </div>
 
-        <form onSubmit={handleSubmit} className="p-7 space-y-6">
-          <div className="space-y-2">
-            <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Assunto / Título</label>
-            <input 
-              name="title" 
-              defaultValue={event?.title} 
-              required 
-              placeholder="Ex: Reunião de Alinhamento"
-              className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium placeholder:text-muted-foreground/30 text-sm"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Cliente Associado (Opcional)</label>
-            <select 
-              name="clientId" 
-              defaultValue={event?.clientId || ""} 
-              className="w-full h-12 bg-background border border-border rounded-2xl px-4 text-foreground focus:ring-2 focus:ring-primary/50 outline-none font-medium text-sm appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_1rem_center] bg-no-repeat"
-            >
-              <option value="">Nenhum Cliente</option>
-              {clients.map(c => (
-                <option key={c.id} value={c.id}>{c.company || c.name}</option>
-              ))}
-            </select>
-          </div>
-
-           <div className="grid grid-cols-2 gap-5">
-             <div className="space-y-2">
-               <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Data (DD/MM/YYYY)</label>
-               <input 
-                 name="date" 
-                 type="text"
-                 inputMode="numeric"
-                 placeholder="DD/MM/YYYY"
-                 value={eventDateDisplay}
-                 onChange={handleDateChange}
-                 required 
-                 className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium appearance-none text-sm"
-               />
-               <input 
-                 type="hidden"
-                 name="date-internal" 
-                 value={internalDate}
-               />
-             </div>
-             <div className="space-y-2">
-               <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Horário (HH:MM)</label>
-               <input 
-                 name="time" 
-                 type="time"
-                 value={eventTimeDisplay}
-                 onChange={handleTimeChange}
-                 required 
-                 className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium appearance-none text-sm"
-               />
-             </div>
+         <form onSubmit={handleSubmit} className="p-4 sm:p-6 lg:p-7 space-y-4 sm:space-y-6 overflow-y-auto flex-1">
+           <div className="space-y-2">
+             <label className="text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Assunto / Título</label>
+             <input 
+               name="title" 
+               defaultValue={event?.title} 
+               required 
+               placeholder="Ex: Reunião de Alinhamento"
+               className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium placeholder:text-muted-foreground/30"
+             />
            </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Tipo de Compromisso</label>
-            <select name="type" defaultValue={event?.type || "Reunião"} className="w-full h-12 bg-background border border-border rounded-2xl px-4 text-foreground focus:ring-2 focus:ring-primary/50 outline-none font-medium text-sm appearance-none">
-              <option value="Reunião">Reunião</option>
-              <option value="Projeto">Projeto</option>
-              <option value="Lembrete">Lembrete</option>
-            </select>
-          </div>
+           <div className="space-y-2">
+             <label className="text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Cliente Associado (Opcional)</label>
+             <select 
+               name="clientId" 
+               defaultValue={event?.clientId || ""} 
+               className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none font-medium appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_1rem_center] bg-no-repeat"
+             >
+               <option value="">Nenhum Cliente</option>
+               {clients.map(c => (
+                 <option key={c.id} value={c.id}>{c.company || c.name}</option>
+               ))}
+             </select>
+           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Observações</label>
-            <textarea 
-              name="description" 
-              defaultValue={event?.description} 
-              rows={3}
-              placeholder="Notas adicionais sobre o compromisso..."
-              className="w-full bg-background border border-border rounded-2xl p-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all resize-none font-medium text-sm tracking-tight"
-            />
-          </div>
-
-          {error && <p className="text-sm text-rose-500 bg-rose-500/10 p-4 rounded-2xl border border-rose-500/20 font-medium tracking-tight">{error}</p>}
-
-          <div className="pt-6 flex items-center justify-between gap-4">
-            {event && (
-              <button 
-                type="button" 
-                onClick={handleDelete}
-                disabled={isPending}
-                className="flex items-center gap-2 text-muted-foreground hover:text-rose-500 transition-colors"
-                title="Excluir"
-              >
-                <Trash2 className="h-5 w-5" />
-              </button>
-            )}
-            <div className="flex items-center gap-3 ml-auto w-full">
-              <button type="submit" disabled={isPending} className="w-full bg-primary text-white h-12 px-8 rounded-2xl font-medium hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-xl shadow-primary/20 tracking-widest uppercase text-xs">
-                {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : (event ? "Salvar Alterações" : "Confirmar Agendamento")}
-              </button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+              <div className="space-y-2">
+                <label className="text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Data (DD/MM/YYYY)</label>
+                <input 
+                  name="date" 
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="DD/MM/YYYY"
+                  value={eventDateDisplay}
+                  onChange={handleDateChange}
+                  required 
+                  className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium appearance-none"
+                />
+                <input 
+                  type="hidden"
+                  name="date-internal" 
+                  value={internalDate}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Horário (HH:MM)</label>
+                <input 
+                  name="time" 
+                  type="time"
+                  value={eventTimeDisplay}
+                  onChange={handleTimeChange}
+                  required 
+                  className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium appearance-none"
+                />
+              </div>
             </div>
-          </div>
+
+           <div className="space-y-2">
+             <label className="text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Tipo de Compromisso</label>
+             <select name="type" defaultValue={event?.type || "Reunião"} className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none font-medium appearance-none">
+               <option value="Reunião">Reunião</option>
+               <option value="Projeto">Projeto</option>
+               <option value="Lembrete">Lembrete</option>
+             </select>
+           </div>
+
+           <div className="space-y-2">
+             <label className="text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Observações</label>
+             <textarea 
+               name="description" 
+               defaultValue={event?.description} 
+               rows={3}
+               placeholder="Notas adicionais sobre o compromisso..."
+               className="w-full bg-background border border-border rounded-2xl p-3 sm:p-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none transition-all resize-none font-medium tracking-tight"
+             />
+           </div>
+
+           {error && <p className="text-xs sm:text-sm text-rose-500 bg-rose-500/10 p-3 sm:p-4 rounded-2xl border border-rose-500/20 font-medium tracking-tight">{error}</p>}
+
+           <div className="pt-4 sm:pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 border-t border-border">
+             {event && (
+               <button 
+                 type="button" 
+                 onClick={handleDelete}
+                 disabled={isPending}
+                 className="flex items-center gap-2 text-muted-foreground hover:text-rose-500 transition-colors"
+                 title="Excluir"
+               >
+                 <Trash2 className="h-5 w-5" />
+               </button>
+             )}
+             <div className="flex items-center gap-2 sm:gap-3 w-full sm:ml-auto">
+               <button type="submit" disabled={isPending} className="flex-1 bg-primary text-white h-10 sm:h-12 px-6 sm:px-8 rounded-2xl font-medium hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-3 shadow-xl shadow-primary/20 tracking-widest uppercase text-[11px] sm:text-xs">
+                 {isPending ? <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" /> : (event ? "Salvar Alterações" : "Confirmar Agendamento")}
+               </button>
+             </div>
+           </div>
         </form>
       </div>
     </div>
