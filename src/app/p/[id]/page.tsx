@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, CheckCircle, ArrowRight, ShieldCheck, Globe, Star, Sparkles } from "lucide-react";
+import { Lock, CheckCircle, ArrowRight, ShieldCheck, Globe, Star, Sparkles, Loader2 } from "lucide-react";
 import { acceptProposalAction } from "@/app/actions";
 import { cn } from "@/lib/utils";
 
-export default function ProposalPublicPage() {
-  const { id } = useParams();
+export default function ProposalPublicPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
+  const id = resolvedParams.id;
+  
   const [proposal, setProposal] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [unlocked, setUnlocked] = useState(false);
@@ -63,20 +65,16 @@ export default function ProposalPublicPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center">
-        <motion.div 
-          animate={{ rotate: 360 }} 
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          className="h-8 w-8 border-t-2 border-primary rounded-full"
-        />
+        <Loader2 className="h-8 w-8 text-primary animate-spin" />
       </div>
     );
   }
 
   if (!proposal) {
     return (
-      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-center p-6">
+      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-center p-6 text-white">
         <Globe className="h-12 w-12 text-muted-foreground/20 mb-6" />
-        <h1 className="text-xl font-light text-white mb-2">Proposta não encontrada</h1>
+        <h1 className="text-xl font-light mb-2">Proposta não encontrada</h1>
         <p className="text-muted-foreground text-sm">Este link pode ter expirado ou a proposta foi removida.</p>
       </div>
     );
