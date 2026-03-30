@@ -31,17 +31,11 @@ export default async function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body className="min-h-full bg-background text-foreground font-sans selection:bg-primary/30">
         <ThemeProvider>
-          <div className="flex min-h-screen">
-            <Sidebar name={agencyName} />
-            <main className="flex-1 md:ml-64 pb-16 md:pb-0 min-h-screen relative">
-              {children}
-            </main>
-            <MobileNav />
-          </div>
+          {children}
         </ThemeProvider>
       </body>
     </html>
