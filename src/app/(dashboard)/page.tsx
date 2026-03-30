@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/components";
 import { Users, FileText, CheckSquare, Target, TrendingUp, Calendar, Eye, EyeOff, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PrivacyValue, PrivacyToggle } from "@/components/PrivacyToggle";
+import ActivityChart from "@/components/ActivityChart";
 
 export const dynamic = 'force-dynamic';
 
@@ -207,25 +208,17 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="premium-card p-10">
-             <div className="mb-8">
-                <h3 className="text-[10px] font-medium uppercase tracking-[0.2em] mb-1.5">Crescimento de Atividade</h3>
-                <p className="text-[10px] text-muted-foreground font-medium italic opacity-60">Histórico de interações registradas no sistema</p>
+          <div className="premium-card p-12">
+             <div className="mb-10 flex items-center justify-between">
+                <div>
+                   <h3 className="text-[10px] font-medium uppercase tracking-[0.3em] text-primary/80 mb-1.5">Análise de Performance</h3>
+                   <p className="text-[10px] text-muted-foreground font-medium italic opacity-40 uppercase tracking-widest">Histórico de interações / Semana</p>
+                </div>
+                <div className="h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_var(--primary)]" />
              </div>
-             {/* Mock Chart SVG Central */}
-             <div className="h-48 w-full flex items-end justify-between gap-3 px-4">
-                {[40, 65, 45, 90, 55, 75, 85].map((h, i) => (
-                  <div key={i} className="flex-1 group relative">
-                    <div 
-                      style={{ height: `${h}%` }} 
-                      className="bg-primary/10 group-hover:bg-primary/30 rounded-t-lg transition-all duration-700 border-t border-primary/20"
-                    />
-                    {i === 3 && <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-medium text-primary/60 tracking-widest">PICO</div>}
-                  </div>
-                ))}
-             </div>
-             <div className="flex justify-between mt-6 text-[9px] font-medium text-muted-foreground uppercase tracking-[0.3em] px-4 opacity-40">
-                <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sab</span><span>Dom</span>
+             {/* Modern Activity Chart */}
+             <div className="pt-4 pb-2">
+                <ActivityChart />
              </div>
           </div>
         </div>
