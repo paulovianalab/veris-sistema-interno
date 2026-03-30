@@ -87,94 +87,86 @@ export default async function DashboardPage() {
           <p className="text-[10px] font-medium uppercase tracking-[0.4em] text-primary/60 mb-2">Visão Executiva</p>
           <h1 className="text-4xl font-light tracking-tight text-foreground">Dashboard</h1>
         </div>
-        <div className="flex items-center gap-3">
-           <div className="px-4 py-2 bg-muted/50 border border-border rounded-xl text-xs font-medium text-muted-foreground flex items-center gap-2">
+        <div className="flex flex-col items-end gap-3">
+           {/* Widget de Meta Semanal - Detalhe Minimalista no Topo */}
+           <div className="flex items-center gap-4 bg-primary/5 px-5 py-2 rounded-full border border-primary/10">
+              <div className="flex items-center gap-2">
+                 <Trophy className="h-3 w-3 text-primary" />
+                 <span className="text-[10px] font-medium uppercase tracking-widest text-primary/80">Meta Semanal:</span>
+                 <span className="text-[10px] font-medium text-foreground">{goalProgress}%</span>
+              </div>
+              <div className="w-24 h-1 bg-primary/10 rounded-full overflow-hidden border border-primary/5">
+                 <div 
+                   className="h-full bg-primary transition-all duration-1000 ease-out" 
+                   style={{ width: `${goalProgress}%` }} 
+                 />
+              </div>
+           </div>
+
+           <div className="px-4 py-2 bg-muted/30 border border-border/50 rounded-xl text-[10px] font-medium text-muted-foreground uppercase tracking-widest flex items-center gap-2">
              <Calendar className="h-3.5 w-3.5" />
              {now.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
            </div>
         </div>
       </div>
 
-      {/* Hero Metrics */}
+      {/* Hero Metrics - 4 cards limpos e uniformes */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <div className="premium-card p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Clientes Ativos</span>
-            <Users className="h-4 w-4 text-primary/50" />
+        <div className="premium-card p-7 transition-all hover:bg-muted/10">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Clientes Ativos</span>
+            <Users className="h-4 w-4 text-primary/40" />
           </div>
           <div>
             <div className="text-3xl font-light text-foreground">{activeClients}</div>
-            <div className="flex items-center gap-1.5 mt-1">
-              <span className="text-[10px] text-emerald-500 font-medium">Consolidado</span>
-            </div>
+            <p className="text-[9px] font-medium text-emerald-500 uppercase tracking-widest mt-1.5 opacity-80">Operação Consolidada</p>
           </div>
         </div>
 
-        <div className="premium-card p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Novos Clientes (Mês)</span>
-            <Target className="h-4 w-4 text-cyan-500/50" />
+        <div className="premium-card p-7 transition-all hover:bg-muted/10">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Novos (Mês)</span>
+            <Target className="h-4 w-4 text-cyan-500/40" />
           </div>
           <div>
             <div className="text-3xl font-light text-foreground">{newClientsThisMonth}</div>
-            <div className="flex items-center gap-1.5 mt-1">
-              <span className={cn("text-[10px] font-medium", clientGrowth >= 0 ? "text-emerald-500" : "text-rose-500")}>
-                {clientGrowth >= 0 ? "+" : ""}{clientGrowth}% vs mês ant.
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <span className={cn("text-[9px] font-medium uppercase tracking-widest", clientGrowth >= 0 ? "text-emerald-500" : "text-rose-500")}>
+                {clientGrowth >= 0 ? "+" : ""}{clientGrowth}% vs anterior
               </span>
             </div>
           </div>
         </div>
 
-        <div className="premium-card p-6 bg-slate-50 dark:bg-slate-900 shadow-inner border-dashed">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Atividades Pendentes</span>
-            <CheckSquare className="h-4 w-4 text-orange-500/50" />
+        <div className="premium-card p-7 transition-all hover:bg-muted/10">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">Tarefas Pendentes</span>
+            <CheckSquare className="h-4 w-4 text-orange-500/40" />
           </div>
           <div>
             <div className="text-3xl font-light text-foreground">{tasks.length}</div>
-            <p className="text-[10px] text-muted-foreground font-medium mt-1">Tarefas não concluídas</p>
+            <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-widest mt-1.5 opacity-60">Atividades em aberto</p>
           </div>
         </div>
 
-        <div className="premium-card p-6 border-2 border-primary/20 bg-primary/5 relative overflow-hidden group">
-          <div className="flex items-center justify-between relative z-10">
-             <span className="text-[10px] font-medium uppercase tracking-widest text-primary">Meta Semanal (Novos)</span>
-             <Trophy className="h-4 w-4 text-primary animate-bounce shadow-sm" />
-          </div>
-          <div className="relative z-10 mt-4">
-            <div className="text-3xl font-light text-foreground flex items-baseline gap-2">
-              <PrivacyValue value={newRevenueThisWeek} />
-              <span className="text-xs text-muted-foreground">/ R$ {weeklyGoal.toLocaleString('pt-BR')}</span>
-            </div>
-            <div className="h-1.5 w-full bg-primary/10 rounded-full mt-4 overflow-hidden border border-primary/5">
-               <div 
-                 className="h-full bg-primary transition-all duration-1000 ease-out" 
-                 style={{ width: `${goalProgress}%` }} 
-               />
-            </div>
-            <p className="text-[9px] font-medium text-primary mt-2 uppercase tracking-widest">{goalProgress}% da meta alcançada</p>
-          </div>
-          <div className="absolute -right-4 -bottom-4 h-24 w-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all" />
-        </div>
-
-        <div className="premium-card p-6 bg-primary text-primary-foreground border-none shadow-xl shadow-primary/20 relative overflow-hidden">
-          <div className="flex items-center justify-between relative z-10">
-             <span className="text-[10px] font-medium uppercase tracking-widest opacity-80">Faturamento Mensal</span>
+        <div className="premium-card p-7 bg-primary text-primary-foreground border-none shadow-xl shadow-primary/20 relative overflow-hidden group">
+          <div className="flex items-center justify-between relative z-10 mb-4">
+             <span className="text-[10px] font-medium uppercase tracking-[0.2em] opacity-80">Faturamento</span>
              <div className="flex items-center gap-2">
                 <PrivacyToggle />
-                <TrendingUp className="h-4 w-4 opacity-70" />
+                <TrendingUp className="h-4 w-4 opacity-50" />
              </div>
           </div>
-          <div className="relative z-10 mt-4">
+          <div className="relative z-10">
             <div className="text-3xl font-light">
               <PrivacyValue value={monthlyRevenue} />
             </div>
-            <div className="mt-4 flex items-center justify-between text-[10px] font-medium opacity-60 uppercase tracking-widest">
+            <div className="mt-1.5 flex items-center justify-between text-[9px] font-medium opacity-60 uppercase tracking-widest">
                <span>Total Ativo</span>
                <span>100% Veris</span>
             </div>
           </div>
-          <div className="absolute -right-2 -top-2 h-20 w-20 bg-white/10 rounded-full blur-2xl" />
+          <div className="absolute -right-2 -top-2 h-20 w-20 bg-white/10 rounded-full blur-2xl transition-all group-hover:bg-white/20" />
         </div>
       </div>
 
@@ -183,7 +175,7 @@ export default async function DashboardPage() {
         <div className="lg:col-span-8 space-y-8">
           <div className="premium-card overflow-hidden">
             <div className="p-6 border-b border-border/40 flex items-center justify-between bg-muted/5">
-              <h2 className="text-sm font-medium uppercase tracking-widest flex items-center gap-2">
+              <h2 className="text-[10px] font-medium uppercase tracking-[0.2em] flex items-center gap-2">
                 <Users className="h-4 w-4 text-primary" /> Pipeline de Clientes
               </h2>
               <a href="/clientes" className="text-[10px] font-medium text-primary hover:underline uppercase tracking-widest">Gerenciar</a>
@@ -196,8 +188,8 @@ export default async function DashboardPage() {
                       {client.company?.[0]?.toUpperCase() || client.name[0].toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-medium text-foreground text-sm leading-none mb-1">{client.company || client.name}</p>
-                      <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">{client.name}</p>
+                      <p className="font-medium text-foreground text-sm leading-none mb-1.5">{client.company || client.name}</p>
+                      <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-widest opacity-60">{client.name}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-8">
@@ -205,20 +197,20 @@ export default async function DashboardPage() {
                       <div className="text-xs font-medium text-foreground">
                         <PrivacyValue value={client.monthlyValue} />
                       </div>
-                      <p className="text-[9px] text-muted-foreground font-medium uppercase">Mensal</p>
+                      <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-widest mt-0.5 opacity-50">Mensal</p>
                     </div>
                     {getStatusBadge(client.type)}
                   </div>
                 </div>
               ))}
-              {clients.length === 0 && <p className="p-10 text-center text-muted-foreground text-sm font-medium">Nenhum cliente disponível.</p>}
+              {clients.length === 0 && <p className="p-10 text-center text-muted-foreground text-[10px] font-medium uppercase tracking-widest opacity-50">Nenhum cliente disponível.</p>}
             </div>
           </div>
 
-          <div className="premium-card p-8">
-             <div className="mb-6">
-                <h3 className="text-sm font-medium uppercase tracking-widest mb-1">Crescimento de Atividade</h3>
-                <p className="text-xs text-muted-foreground font-medium italic">Histórico de interações registradas no sistema</p>
+          <div className="premium-card p-10">
+             <div className="mb-8">
+                <h3 className="text-[10px] font-medium uppercase tracking-[0.2em] mb-1.5">Crescimento de Atividade</h3>
+                <p className="text-[10px] text-muted-foreground font-medium italic opacity-60">Histórico de interações registradas no sistema</p>
              </div>
              {/* Mock Chart SVG Central */}
              <div className="h-48 w-full flex items-end justify-between gap-3 px-4">
@@ -226,13 +218,13 @@ export default async function DashboardPage() {
                   <div key={i} className="flex-1 group relative">
                     <div 
                       style={{ height: `${h}%` }} 
-                      className="bg-primary/20 hover:bg-primary/40 rounded-t-lg transition-all duration-500 border-t border-primary/30"
+                      className="bg-primary/10 group-hover:bg-primary/30 rounded-t-lg transition-all duration-700 border-t border-primary/20"
                     />
-                    {i === 3 && <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-medium text-primary">PICO</div>}
+                    {i === 3 && <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-medium text-primary/60 tracking-widest">PICO</div>}
                   </div>
                 ))}
              </div>
-             <div className="flex justify-between mt-4 text-[9px] font-medium text-muted-foreground uppercase tracking-widest px-4 opacity-50">
+             <div className="flex justify-between mt-6 text-[9px] font-medium text-muted-foreground uppercase tracking-[0.3em] px-4 opacity-40">
                 <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sab</span><span>Dom</span>
              </div>
           </div>
@@ -242,29 +234,29 @@ export default async function DashboardPage() {
         <div className="lg:col-span-4 space-y-8">
           <div className="premium-card overflow-hidden">
             <div className="p-6 border-b border-border/40 bg-muted/5 flex items-center justify-between">
-              <h2 className="text-sm font-medium uppercase tracking-widest flex items-center gap-2">
+              <h2 className="text-[10px] font-medium uppercase tracking-[0.2em] flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-primary" /> Agenda & Eventos
               </h2>
               <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
             </div>
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-7">
               {events.map(event => (
                 <div key={event.id} className="flex gap-4 group cursor-pointer hover:translate-x-1 transition-all">
                   <div className={cn(
                     "h-10 w-1 px-0 rounded-full shrink-0 transition-all",
-                    event.type === "Reunião" ? "bg-primary" : "bg-orange-500"
+                    event.type === "Reunião" ? "bg-primary/60" : "bg-orange-500/60"
                   )} />
-                  <div className="space-y-1 w-full">
+                  <div className="space-y-1.5 w-full">
                     <div className="flex justify-between items-start">
                        <p className="text-[13px] font-medium text-foreground group-hover:text-primary transition-colors leading-tight truncate max-w-[180px]">
                         {event.title}
                        </p>
-                       <span className="text-[10px] font-medium text-primary bg-primary/5 px-2 py-0.5 rounded-md whitespace-nowrap">
+                       <span className="text-[9px] font-medium text-primary bg-primary/5 px-2 py-0.5 rounded-md whitespace-nowrap tracking-wider">
                          {new Date(event.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                        </span>
                     </div>
-                    <div className="flex items-center gap-2 text-[10px] font-medium text-muted-foreground uppercase tracking-widest opacity-60">
-                       <span className="truncate max-w-[140px]">{event.client?.company || event.client?.name || "Interno"}</span>
+                    <div className="flex items-center gap-2 text-[9px] font-medium text-muted-foreground uppercase tracking-[0.2em] opacity-60">
+                       <span className="truncate max-w-[140px] font-medium">{event.client?.company || event.client?.name || "Interno"}</span>
                        <span>•</span>
                        <span>{new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</span>
                     </div>
@@ -273,34 +265,34 @@ export default async function DashboardPage() {
               ))}
               {events.length === 0 && (
                  <div className="py-10 text-center space-y-3">
-                    <p className="text-muted-foreground text-[10px] font-medium uppercase tracking-[0.2em] italic">Nenhum evento agendado</p>
+                    <p className="text-muted-foreground text-[9px] font-medium uppercase tracking-[0.3em] italic opacity-40">Nenhum evento agendado</p>
                  </div>
               )}
               <a 
                 href="/agenda" 
-                className="block w-full py-3 bg-muted hover:bg-muted/80 rounded-xl text-[10px] font-medium uppercase tracking-widest text-center transition-all"
+                className="block w-full py-3.5 bg-muted/50 hover:bg-muted rounded-2xl text-[9px] font-medium uppercase tracking-[0.2em] text-center transition-all opacity-80"
               >
                 Acessar Agenda Completa
               </a>
             </div>
           </div>
 
-          <div className="p-8 rounded-3xl bg-slate-900 text-white space-y-6 relative overflow-hidden group">
+          <div className="p-10 rounded-[2.5rem] bg-slate-900 text-white space-y-6 relative overflow-hidden group border border-white/5">
              <div className="relative z-10">
-                <h3 className="text-xs font-medium uppercase tracking-widest opacity-60">Operação Veris</h3>
-                <p className="text-xl font-light mt-2 leading-tight">Mantenha o foco na entrega de alto nível.</p>
-                <div className="mt-8 flex flex-col gap-3">
-                   <div className="flex items-center justify-between text-[10px] font-medium">
-                      <span className="opacity-60">SLA Médio</span>
-                      <span>98.5%</span>
+                <h3 className="text-[10px] font-medium uppercase tracking-[0.3em] opacity-40">Operação Veris</h3>
+                <p className="text-xl font-light mt-3 leading-snug tracking-tight">Mantenha o foco na entrega de alto nível e consistência.</p>
+                <div className="mt-10 flex flex-col gap-4">
+                   <div className="flex items-center justify-between text-[9px] font-medium uppercase tracking-widest">
+                      <span className="opacity-40">SLA Médio de Entrega</span>
+                      <span className="text-emerald-400">98.5%</span>
                    </div>
-                   <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-emerald-500 w-[98%]" />
+                   <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                      <div className="h-full bg-emerald-500/80 w-[98%] transition-all duration-1000" />
                    </div>
                 </div>
              </div>
              {/* Subtle pattern */}
-             <div className="absolute -right-10 -bottom-10 h-40 w-40 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-all" />
+             <div className="absolute -right-12 -bottom-12 h-44 w-44 bg-primary/10 rounded-full blur-3xl transition-all group-hover:bg-primary/20" />
           </div>
         </div>
       </div>
