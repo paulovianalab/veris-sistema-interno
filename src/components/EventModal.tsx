@@ -14,6 +14,12 @@ interface EventModalProps {
 }
 
 export default function EventModal({ isOpen, onClose, selectedDate, event, clients }: EventModalProps) {
+  // CRITICAL FIX: Check isOpen BEFORE calling any hooks
+  if (!isOpen) {
+    return null;
+  }
+
+  // NOW we can safely call hooks - they will always be called in the same order
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [eventDateDisplay, setEventDateDisplay] = useState<string>(""); // DD/MM/YYYY format for display
@@ -21,7 +27,7 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
   const [internalDate, setInternalDate] = useState<string>(""); // YYYY-MM-DD for form submission
   const [internalTime, setInternalTime] = useState<string>(""); // HH:MM for form submission
 
-  // Helper function to convert DD/MM/YYYY to YYYY-MM-DD
+  // Helper functions
   const brazilDateToISO = (brazilDate: string): string => {
     const parts = brazilDate.split('/');
     if (parts.length === 3) {
@@ -30,7 +36,6 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
     return "";
   };
 
-  // Helper function to convert YYYY-MM-DD to DD/MM/YYYY
   const isoDateToBrazil = (isoDate: string): string => {
     const parts = isoDate.split('-');
     if (parts.length === 3) {
@@ -41,20 +46,10 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
 
   // Initialize date and time when modal opens or event changes
   useEffect(() => {
-    if (!isOpen) {
-      // Reset state when modal closes
-      setEventDateDisplay("");
-      setEventTimeDisplay("");
-      setInternalDate("");
-      setInternalTime("");
-      return;
-    }
-
     if (event?.date) {
       // Convert UTC date from database to Brasília time
       const eventDateObj = new Date(event.date);
       const brasiliaTime = utcToBrasilia(eventDateObj);
-      // Convert to display format (DD/MM/YYYY)
       const displayDate = isoDateToBrazil(brasiliaTime.dateStr);
       setEventDateDisplay(displayDate);
       setEventTimeDisplay(brasiliaTime.timeStr);
@@ -69,14 +64,12 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
       setInternalDate(brasiliaTime.dateStr);
       setInternalTime("09:00");
     }
-  }, [isOpen, event, selectedDate]);
+  }, [event, selectedDate]);
 
   // Handle date input change (DD/MM/YYYY format)
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEventDateDisplay(value);
-    
-    // Convert to YYYY-MM-DD for form submission
     const isoDate = brazilDateToISO(value);
     setInternalDate(isoDate);
   };
@@ -87,10 +80,6 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
     setEventTimeDisplay(value);
     setInternalTime(value);
   };
-
-  if (!isOpen) {
-    return null;
-  }
 
   async function handleSubmit(eventForm: React.FormEvent<HTMLFormElement>) {
     eventForm.preventDefault();

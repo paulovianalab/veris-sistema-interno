@@ -35,39 +35,40 @@ const servicesData = {
 };
 
 export default function ProposalModal({ isOpen, onClose, proposal, clients }: ProposalModalProps) {
+   // CRITICAL FIX: Check isOpen BEFORE calling any hooks
+   if (!isOpen) {
+     return null;
+   }
+
+   // NOW we can safely call hooks - they will always be called in the same order
    const [isPending, setIsPending] = useState(false);
    const [error, setError] = useState<string | null>(null);
    const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
    // Initialize services only when modal opens with a proposal
    useEffect(() => {
-     if (isOpen && proposal?.selectedServices) {
+     if (proposal?.selectedServices) {
        try {
          const parsed = JSON.parse(proposal.selectedServices);
          setSelectedServices(Array.isArray(parsed) ? parsed : []);
        } catch {
          setSelectedServices([]);
        }
-     } else if (isOpen) {
+     } else {
        setSelectedServices([]);
      }
-   }, [isOpen, proposal]);
-
-   // Don't render anything if modal is not open
-   if (!isOpen) {
-     return null;
-   }
+   }, [proposal]);
 
    const generateScope = useMemo(() => {
-    if (selectedServices.length === 0) return "";
-    
-    const selectedTexts = selectedServices.map((serviceKey) => {
-      const service = servicesData[serviceKey as keyof typeof servicesData];
-      return service?.scope || "";
-    });
+     if (selectedServices.length === 0) return "";
+     
+     const selectedTexts = selectedServices.map((serviceKey) => {
+       const service = servicesData[serviceKey as keyof typeof servicesData];
+       return service?.scope || "";
+     });
 
-    return selectedTexts.join("\n\n");
-  }, [selectedServices]);
+     return selectedTexts.join("\n\n");
+   }, [selectedServices]);
 
   const toggleService = (serviceKey: string) => {
     setSelectedServices((prev) =>
