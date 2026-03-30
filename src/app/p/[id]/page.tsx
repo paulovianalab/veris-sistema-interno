@@ -37,7 +37,7 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
         setLoading(false);
       }
     }
-    fetchProposal();
+    if (id) fetchProposal();
   }, [id]);
 
   const handleUnlock = (e: React.FormEvent) => {
@@ -92,12 +92,7 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
             className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#050505]"
           >
             <div className="w-full max-w-md space-y-12 text-center">
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="space-y-6"
-              >
+              <div className="space-y-6">
                 <div className="flex justify-center mb-8">
                   <img src="/logo-veris.png" alt="Veris" className="h-8 w-auto brightness-200" />
                 </div>
@@ -108,15 +103,9 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
                   </span>
                 </h1>
                 <p className="text-muted-foreground/60 text-xs uppercase tracking-[0.3em]">Ambiente Privado e Seguro</p>
-              </motion.div>
+              </div>
 
-              <motion.form 
-                onSubmit={handleUnlock}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="space-y-6"
-              >
+              <form onSubmit={handleUnlock} className="space-y-6">
                 <div className="relative group">
                   <Lock className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/30 group-focus-within:text-primary transition-colors" />
                   <input 
@@ -127,7 +116,7 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
                     className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 focus:ring-2 focus:ring-primary/50 outline-none transition-all text-center tracking-widest placeholder:tracking-normal placeholder:text-muted-foreground/30 font-medium"
                   />
                 </div>
-                {error && <p className="text-rose-500 text-[10px] uppercase tracking-widest font-medium animate-shake">{error}</p>}
+                {error && <p className="text-rose-500 text-[10px] uppercase tracking-widest font-medium text-center">{error}</p>}
                 
                 <button 
                   type="submit"
@@ -135,7 +124,7 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
                 >
                   Desbloquear Proposta <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </button>
-              </motion.form>
+              </form>
             </div>
           </motion.div>
         ) : (
@@ -148,13 +137,9 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
           >
             {/* Hero Section */}
             <section className="text-center space-y-12">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] uppercase tracking-[0.3em] font-semibold"
-              >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] uppercase tracking-[0.3em] font-semibold">
                 <Sparkles className="h-3 w-3" /> Exclusividade Veris Digital
-              </motion.div>
+              </div>
               
               <div className="space-y-6">
                 <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-[1.1]">
@@ -170,7 +155,7 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
 
             {/* Value & Highlight */}
             <section className="grid md:grid-cols-2 gap-8">
-              <div className="premium-card p-10 bg-white/[0.02] border-white/[0.05] space-y-8 flex flex-col justify-center">
+              <div className="p-10 bg-white/[0.02] border border-white/[0.05] rounded-[2.5rem] space-y-8 flex flex-col justify-center">
                  <div className="space-y-2">
                     <p className="text-[10px] uppercase tracking-[0.4em] text-primary font-bold">Investimento Estimado</p>
                     <h3 className="text-5xl font-light tracking-tighter italic">
@@ -182,7 +167,7 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
                  </p>
               </div>
 
-              <div className="premium-card p-10 bg-primary border-none text-white space-y-8">
+              <div className="p-10 bg-primary rounded-[2.5rem] border-none text-white space-y-8">
                  <ShieldCheck className="h-12 w-12 text-white/40" />
                  <h4 className="text-2xl font-light leading-tight">Garantimos a implementação de chatbots humanizados e gestão de tráfego de alta conversão.</h4>
               </div>
@@ -220,21 +205,17 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
                </div>
 
                {accepted ? (
-                 <motion.div 
-                   initial={{ scale: 0.9, opacity: 0 }}
-                   animate={{ scale: 1, opacity: 1 }}
-                   className="inline-flex items-center gap-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 px-12 py-6 rounded-[2rem]"
-                 >
+                 <div className="inline-flex items-center gap-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 px-12 py-6 rounded-[2rem]">
                     <CheckCircle className="h-6 w-6" />
                     <span className="text-lg font-medium tracking-tight">Proposta Aceita com Sucesso</span>
-                 </motion.div>
+                 </div>
                ) : (
                  <button 
                    onClick={handleAccept}
                    disabled={isAccepting}
                    className="bg-primary text-white px-16 py-7 rounded-[2.5rem] font-bold text-xs uppercase tracking-[0.3em] hover:brightness-110 active:scale-95 transition-all shadow-2xl shadow-primary/30 flex items-center justify-center gap-4 mx-auto min-w-[300px]"
                  >
-                    {isAccepting ? <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity }} className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full" /> : "Aceitar Proposta Exclusiva"}
+                    {isAccepting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Aceitar Proposta Exclusiva"}
                  </button>
                )}
             </section>
