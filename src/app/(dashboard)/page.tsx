@@ -13,14 +13,21 @@ export default async function DashboardPage() {
 
   let clients: any[] = [];
   let tasks: any[] = [];
+  let events: any[] = [];
   let newClientsThisMonth = 0;
   let prevMonthClientsCount = 0;
 
   try {
-    [clients, tasks, newClientsThisMonth, prevMonthClientsCount] = await Promise.all([
+    [clients, tasks, events, newClientsThisMonth, prevMonthClientsCount] = await Promise.all([
       prisma.client.findMany({ orderBy: { createdAt: 'desc' } }),
       prisma.task.findMany({
         where: { status: "Pendente" },
+        orderBy: { date: 'asc' },
+        take: 3,
+        include: { client: true }
+      }),
+      prisma.event.findMany({
+        where: { date: { gte: now } },
         orderBy: { date: 'asc' },
         take: 5,
         include: { client: true }
@@ -52,11 +59,11 @@ export default async function DashboardPage() {
 
   const getStatusBadge = (status: string) => {
     switch(status) {
-      case "Ativo": return <Badge variant="success">Ativo</Badge>;
-      case "Negociação": return <Badge variant="info">Negociação</Badge>;
-      case "Proposta": return <Badge variant="warning">Proposta</Badge>;
-      case "Lead": return <Badge variant="secondary">Lead</Badge>;
-      default: return <Badge variant="outline">{status}</Badge>;
+      case "Ativo": return <Badge variant="success" className="text-[10px] font-medium uppercase px-2 py-0.5">Ativo</Badge>;
+      case "Negociação": return <Badge variant="info" className="text-[10px] font-medium uppercase px-2 py-0.5">Negociação</Badge>;
+      case "Proposta": return <Badge variant="warning" className="text-[10px] font-medium uppercase px-2 py-0.5">Proposta</Badge>;
+      case "Lead": return <Badge variant="secondary" className="text-[10px] font-medium uppercase px-2 py-0.5">Lead</Badge>;
+      default: return <Badge variant="outline" className="text-[10px] font-medium uppercase px-2 py-0.5">{status}</Badge>;
     }
   };
 
@@ -107,19 +114,19 @@ export default async function DashboardPage() {
 
         <div className="premium-card p-6 bg-slate-50 dark:bg-slate-900 shadow-inner border-dashed">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Pendências</span>
+            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Atividades Pendentes</span>
             <CheckSquare className="h-4 w-4 text-orange-500/50" />
           </div>
           <div>
             <div className="text-3xl font-light text-foreground">{tasks.length}</div>
-            <p className="text-[10px] text-muted-foreground font-medium mt-1">Tarefas em aberto</p>
+            <p className="text-[10px] text-muted-foreground font-medium mt-1">Tarefas não concluídas</p>
           </div>
         </div>
 
         <div className="premium-card p-6 bg-primary text-primary-foreground border-none">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-medium uppercase tracking-widest opacity-70">Receita Mensal (Fee)</span>
-            <TrendingUp className="h-4 w-4 opacity-70" />
+             <span className="text-[10px] font-medium uppercase tracking-widest opacity-70">Faturamento Mensal</span>
+             <TrendingUp className="h-4 w-4 opacity-70" />
           </div>
           <div>
             <div className="text-3xl font-light">R$ {monthlyRevenue.toLocaleString('pt-BR')}</div>
@@ -191,34 +198,47 @@ export default async function DashboardPage() {
         {/* Sidebar Feed */}
         <div className="lg:col-span-4 space-y-8">
           <div className="premium-card overflow-hidden">
-            <div className="p-6 border-b border-border/40 bg-muted/5">
+            <div className="p-6 border-b border-border/40 bg-muted/5 flex items-center justify-between">
               <h2 className="text-sm font-medium uppercase tracking-widest flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-primary" /> Atividades Críticas
+                <Calendar className="h-4 w-4 text-primary" /> Agenda & Eventos
               </h2>
+              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
             </div>
             <div className="p-6 space-y-6">
-              {tasks.map(task => (
-                <div key={task.id} className="flex gap-4 group">
+              {events.map(event => (
+                <div key={event.id} className="flex gap-4 group cursor-pointer hover:translate-x-1 transition-all">
                   <div className={cn(
-                    "h-2.5 w-2.5 rounded-full mt-1.5 shrink-0",
-                    task.priority === "Alta" ? "bg-rose-500" : "bg-primary"
+                    "h-10 w-1 px-0 rounded-full shrink-0 transition-all",
+                    event.type === "Reunião" ? "bg-primary" : "bg-orange-500"
                   )} />
-                  <div className="space-y-1">
-                    <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors leading-tight">
-                      {task.title}
-                    </p>
-                    <div className="flex items-center gap-2 text-[9px] font-medium text-muted-foreground uppercase tracking-widest">
-                       <span>{task.client?.name || "Interno"}</span>
+                  <div className="space-y-1 w-full">
+                    <div className="flex justify-between items-start">
+                       <p className="text-[13px] font-medium text-foreground group-hover:text-primary transition-colors leading-tight truncate max-w-[180px]">
+                        {event.title}
+                       </p>
+                       <span className="text-[10px] font-medium text-primary bg-primary/5 px-2 py-0.5 rounded-md whitespace-nowrap">
+                         {new Date(event.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                       </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] font-medium text-muted-foreground uppercase tracking-widest opacity-60">
+                       <span className="truncate max-w-[140px]">{event.client?.company || event.client?.name || "Interno"}</span>
                        <span>•</span>
-                       <span>{new Date(task.date).toLocaleDateString('pt-BR')}</span>
+                       <span>{new Date(event.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</span>
                     </div>
                   </div>
                 </div>
               ))}
-              {tasks.length === 0 && <p className="text-center text-muted-foreground text-xs font-medium py-10 italic">Nenhuma atividade pendente.</p>}
-              <button className="w-full py-3 bg-muted hover:bg-muted/80 rounded-xl text-[10px] font-medium uppercase tracking-widest transition-all">
-                Ver Todas as Tarefas
-              </button>
+              {events.length === 0 && (
+                 <div className="py-10 text-center space-y-3">
+                    <p className="text-muted-foreground text-[10px] font-medium uppercase tracking-[0.2em] italic">Nenhum evento agendado</p>
+                 </div>
+              )}
+              <a 
+                href="/agenda" 
+                className="block w-full py-3 bg-muted hover:bg-muted/80 rounded-xl text-[10px] font-medium uppercase tracking-widest text-center transition-all"
+              >
+                Acessar Agenda Completa
+              </a>
             </div>
           </div>
 
