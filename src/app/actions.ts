@@ -250,11 +250,15 @@ export async function deleteNoteAction(id: string) {
 export async function createEventAction(formData: FormData) {
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
-  const date = new Date(formData.get("date") as string);
+  const dateStr = formData.get("date") as string;
+  const timeStr = formData.get("time") as string;
+  
+  // Combina data e hora para salvar no banco
+  const fullDate = new Date(`${dateStr}T${timeStr}:00`);
   const type = formData.get("type") as string;
 
   await prisma.event.create({
-    data: { title, description, date, type },
+    data: { title, description, date: fullDate, type },
   });
 
   revalidatePath("/agenda");
