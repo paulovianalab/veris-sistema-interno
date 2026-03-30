@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { X, Loader2, Trash2, Link as LinkIcon, FileText } from "lucide-react";
 import { createProposalAction, updateProposalAction, deleteProposalAction } from "@/app/actions";
 
@@ -37,9 +37,21 @@ const servicesData = {
 export default function ProposalModal({ isOpen, onClose, proposal, clients }: ProposalModalProps) {
    const [isPending, setIsPending] = useState(false);
    const [error, setError] = useState<string | null>(null);
-   const [selectedServices, setSelectedServices] = useState<string[]>(
-     proposal?.selectedServices ? JSON.parse(proposal.selectedServices) : []
-   );
+   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+
+   // Initialize services only when modal opens with a proposal
+   useEffect(() => {
+     if (isOpen && proposal?.selectedServices) {
+       try {
+         const parsed = JSON.parse(proposal.selectedServices);
+         setSelectedServices(Array.isArray(parsed) ? parsed : []);
+       } catch {
+         setSelectedServices([]);
+       }
+     } else if (isOpen) {
+       setSelectedServices([]);
+     }
+   }, [isOpen, proposal]);
 
    if (!isOpen) return <></>;
 

@@ -21,7 +21,12 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
 
   // Initialize date and time when modal opens or event changes
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      // Reset state when modal closes
+      setEventDate("");
+      setEventTime("");
+      return;
+    }
 
     if (event?.date) {
       // Convert UTC date from database to Brasília time
