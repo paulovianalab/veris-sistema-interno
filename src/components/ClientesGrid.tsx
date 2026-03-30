@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Users, Search, PlusCircle, MoreVertical, Edit2, TrendingUp, Instagram } from "lucide-react";
+import { Users, Search, PlusCircle, MoreVertical, Edit2, TrendingUp, Globe } from "lucide-react";
 import { Badge } from "@/components/ui/components";
 import Link from "next/link";
 import ClientModal from "@/components/ClientModal";
@@ -147,7 +147,7 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
                       className="p-3 rounded-xl border border-border bg-card/40 text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
                       title="Instagram"
                     >
-                      <Instagram className="h-4 w-4" />
+                      <Globe className="h-4 w-4" />
                     </a>
                   )}
                   <button 
