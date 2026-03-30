@@ -19,6 +19,7 @@ model Client {
   instagram    String?    // Link ou @ do Instagram
   tasks        Task[]
   proposals    Proposal[]
+  services     String?    // Ex: "Tráfego Pago, SEO, Chatbot"
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   events       Event[]
@@ -74,5 +75,6 @@ model Setting {
   id          String   @id @default("global")
   agencyName  String   @default("Veris Digital")
   theme       String   @default("dark")
+  weeklyGoal  Float    @default(5000)
   updatedAt   DateTime @updatedAt
 }
