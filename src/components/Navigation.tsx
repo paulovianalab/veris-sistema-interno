@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, FileText, CheckSquare, StickyNote, Calendar, Settings, LogOut, Moon, Sun } from "lucide-react";
+import { LayoutDashboard, Users, FileText, CheckSquare, StickyNote, Calendar, Settings, LogOut, Moon, Sun, Layout } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/app/actions";
 import { useTheme } from "@/components/ThemeProvider";
@@ -10,6 +10,7 @@ import { useTheme } from "@/components/ThemeProvider";
 const links = [
   { name: "Visão Geral", href: "/", icon: LayoutDashboard },
   { name: "Clientes & CRM", href: "/clientes", icon: Users },
+  { name: "Cronograma", href: "/cronograma", icon: Layout },
   { name: "Propostas", href: "/propostas", icon: FileText },
   { name: "Tarefas", href: "/tarefas", icon: CheckSquare },
   { name: "Notas", href: "/notas", icon: StickyNote },
