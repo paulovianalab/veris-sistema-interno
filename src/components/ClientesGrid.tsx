@@ -35,11 +35,11 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
 
   const getStatusBadge = (status: string) => {
     switch(status) {
-      case "Ativo": return <Badge variant="success" className="px-3 py-1">Ativo</Badge>;
-      case "Negociação": return <Badge variant="info" className="px-3 py-1">Negociação</Badge>;
-      case "Proposta": return <Badge variant="warning" className="px-3 py-1">Proposta</Badge>;
-      case "Lead": return <Badge variant="secondary" className="px-3 py-1">Lead</Badge>;
-      default: return <Badge variant="outline" className="px-3 py-1">{status}</Badge>;
+      case "Ativo": return <Badge variant="success" className="px-3 py-1 text-[10px] uppercase font-medium">Ativo</Badge>;
+      case "Negociação": return <Badge variant="info" className="px-3 py-1 text-[10px] uppercase font-medium">Negociação</Badge>;
+      case "Proposta": return <Badge variant="warning" className="px-3 py-1 text-[10px] uppercase font-medium">Proposta</Badge>;
+      case "Lead": return <Badge variant="secondary" className="px-3 py-1 text-[10px] uppercase font-medium">Lead</Badge>;
+      default: return <Badge variant="outline" className="px-3 py-1 text-[10px] uppercase font-medium">{status}</Badge>;
     }
   };
 
@@ -47,7 +47,7 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
 
   return (
     <div className="space-y-10">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-border pb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-border pb-8 max-w-6xl mx-auto w-full">
         <div>
           <h1 className="text-3xl font-light tracking-tight text-foreground">Clientes & CRM</h1>
           <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-2 flex items-center gap-2">
@@ -62,7 +62,7 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
         </button>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center px-4">
+      <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center px-4 max-w-6xl mx-auto w-full">
         <div className="flex flex-wrap gap-1.5 p-1 bg-slate-100 dark:bg-slate-900/50 rounded-xl border border-border/50">
           {tabs.map(tab => (
             <Link 
@@ -93,70 +93,67 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
 
       <div className="max-w-6xl mx-auto w-full space-y-6">
         {/* Table Headers */}
-        <div className="hidden lg:grid grid-cols-12 px-20 py-6 bg-muted/5 rounded-3xl border border-border/30 text-[9px] font-medium text-muted-foreground uppercase tracking-[0.3em] opacity-50">
-           <div className="col-span-4 flex items-center gap-3">
+        <div className="hidden lg:grid grid-cols-12 px-24 py-6 bg-muted/5 rounded-3xl border border-border/30 text-[9px] font-medium text-muted-foreground uppercase tracking-[0.3em] opacity-40">
+           <div className="col-span-4 pl-4 flex items-center gap-3">
              <div className="h-1 w-3 rounded-full bg-primary/30" />
              Cliente / Empresa
            </div>
            <div className="col-span-2">Gestor</div>
-           <div className="col-span-2">Fee Mensal</div>
-           <div className="col-span-2">Status</div>
-           <div className="col-span-2 text-right pr-4">Ações</div>
+           <div className="col-span-2 text-center">Fee Mensal</div>
+           <div className="col-span-2 text-center">Status</div>
+           <div className="col-span-2 text-right pr-6">Ações</div>
         </div>
 
         <div className="space-y-4 pb-20">
           {filteredClients.map(client => (
-            <div key={client.id} className="premium-card lg:grid grid-cols-12 flex flex-col p-6 lg:p-0 lg:h-28 items-center px-20 hover:border-primary/20 transition-all group animate-in fade-in slide-in-from-bottom-2 duration-700">
-              <div className="col-span-4 flex items-center gap-6 w-full">
-                <div className="h-14 w-14 rounded-2xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-slate-600 dark:text-slate-400 font-medium text-lg border border-border/40 shadow-inner group-hover:scale-105 transition-transform duration-500">
-                  {client.company?.[0]?.toUpperCase() || client.name[0].toUpperCase()}
-                </div>
+            <div key={client.id} className="premium-card lg:grid grid-cols-12 flex flex-col p-6 lg:p-0 lg:h-32 items-center px-24 hover:border-primary/20 transition-all group animate-in fade-in slide-in-from-bottom-2 duration-700">
+              <div className="col-span-4 flex items-center w-full pl-4">
                 <div className="flex flex-col truncate">
-                  <span className="font-medium text-foreground text-[16px] leading-tight mb-1 truncate tracking-tight">{client.company || client.name}</span>
-                  <span className="text-[10px] text-muted-foreground/50 font-medium uppercase tracking-[0.15em]">REGISTRO #{client.id.slice(-6).toUpperCase()}</span>
+                  <span className="font-medium text-foreground text-[18px] leading-tight mb-2 truncate tracking-tight group-hover:text-primary transition-colors">{client.company || client.name}</span>
+                  <span className="text-[10px] text-muted-foreground/50 font-medium uppercase tracking-[0.2em]">IDENTIFICAÇÃO #{client.id.slice(-6).toUpperCase()}</span>
                 </div>
               </div>
 
               <div className="col-span-2 hidden lg:flex flex-col justify-center">
                 <span className="text-[14px] font-medium text-slate-600 dark:text-slate-400">{client.name}</span>
-                <span className="text-[9px] text-muted-foreground/30 font-medium uppercase tracking-wider mt-1">Responsável</span>
+                <span className="text-[9px] text-muted-foreground/30 font-medium uppercase tracking-wider mt-1.5">Responsável</span>
               </div>
 
-              <div className="col-span-2 hidden lg:flex flex-col justify-center">
-                <span className="text-[15px] font-light text-foreground tracking-tight">R$ {client.monthlyValue.toLocaleString('pt-BR')}</span>
-                <span className="text-[9px] text-muted-foreground/30 font-medium uppercase tracking-wider mt-1">Recorrência</span>
+              <div className="col-span-2 hidden lg:flex flex-col justify-center text-center">
+                <span className="text-[16px] font-light text-foreground tracking-tight">R$ {client.monthlyValue.toLocaleString('pt-BR')}</span>
+                <span className="text-[9px] text-muted-foreground/30 font-medium uppercase tracking-wider mt-1.5 whitespace-nowrap">Recorrência Mensal</span>
               </div>
 
-              <div className="col-span-2 hidden lg:flex items-center">
+              <div className="col-span-2 hidden lg:flex items-center justify-center">
                 {getStatusBadge(client.type)}
               </div>
 
-              <div className="col-span-2 flex items-center justify-between lg:justify-end gap-4 w-full lg:w-auto mt-6 lg:mt-0 pt-6 lg:pt-0 border-t lg:border-none border-border/50">
+              <div className="col-span-2 flex items-center justify-between lg:justify-end gap-3 w-full lg:w-auto mt-6 lg:mt-0 pt-6 lg:pt-0 border-t lg:border-none border-border/50">
                 <div className="lg:hidden space-y-2">
                    <div className="flex items-center gap-2">{getStatusBadge(client.type)}</div>
                    <div className="text-2xl font-light text-primary">R$ {client.monthlyValue.toLocaleString('pt-BR')}</div>
                 </div>
 
-                <div className="flex items-center gap-3 pr-2">
+                <div className="flex items-center gap-3 pr-4">
                   {client.instagram && (
                     <a 
                       href={`https://instagram.com/${client.instagram.replace('@', '')}`} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="p-3.5 rounded-2xl border border-border hover:border-primary/30 hover:bg-primary/5 text-slate-400 hover:text-primary transition-all shadow-sm"
+                      className="p-4 rounded-2xl border border-border hover:border-primary/30 hover:bg-primary/5 text-slate-400 hover:text-primary transition-all shadow-sm"
                       title="Insta"
                     >
-                      <svg className="h-4.5 w-4.5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.247 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.061 1.366-.333 2.633-1.308 3.608-.975.975-2.241 1.247-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.061-2.633-.333-3.608-1.308-.975-.975-1.247-2.241-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.061-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.247 3.608-1.308 1.266-.058 1.646-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-1.352.06-2.274.274-3.082.589-.838.324-1.547.76-2.257 1.467s-1.144 1.419-1.467 2.257c-.315.808-.529 1.73-.589 3.082-.058 1.28-.072 1.688-.072 4.947s.014 3.667.072 4.947c.06 1.352.274 2.274.589 3.082.324.838.76 1.547 1.467 2.257s1.419 1.144 2.257 1.467c.808.315 1.73.529 3.082.589 1.28.058 1.688.072 4.947.072s3.667-.014 4.947-.072c1.352-.06 2.274-.274 3.082-.589.838-.324 1.547-.76 2.257-1.467s1.144-1.419 1.467-2.257c.315-.808.529-1.73.589-3.082.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.06-1.352-.274-2.274-.589-3.082-.324-.838-.76-1.547-1.467-2.257s-1.419-1.144-2.257-1.467c-.808-.315-1.73-.529-3.082-.589-1.28-.058-1.688-.072-4.947-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                      <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.247 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.061 1.366-.333 2.633-1.308 3.608-.975.975-2.241 1.247-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.061-2.633-.333-3.608-1.308-.975-.975-1.247-2.241-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.061-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.247 3.608-1.308 1.266-.058 1.646-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-1.352.06-2.274.274-3.082.589-.838.324-1.547.76-2.257 1.467s-1.144 1.419-1.467 2.257c-.315.808-.529 1.73-.589 3.082-.058 1.28-.072 1.688-.072 4.947s.014 3.667.072 4.947c.06 1.352.274 2.274.589 3.082.324.838.76 1.547 1.467 2.257s1.419 1.144 2.257 1.467c.808.315 1.73.529 3.082.589 1.28.058 1.688.072 4.947.072s3.667-.014 4.947-.072c1.352-.06 2.274-.274 3.082-.589.838-.324 1.547-.76 2.257-1.467s1.144-1.419 1.467-2.257c.315-.808.529-1.73.589-3.082.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.06-1.352-.274-2.274-.589-3.082-.324-.838-.76-1.547-1.467-2.257s-1.419-1.144-2.257-1.467c-.808-.315-1.73-.529-3.082-.589-1.28-.058-1.688-.072-4.947-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     </a>
                   )}
                   <button 
                     onClick={() => openEditModal(client)}
-                    className="p-3.5 rounded-2xl border border-border hover:bg-muted text-slate-400 hover:text-primary transition-all shadow-sm active:scale-95"
+                    className="p-4 rounded-2xl border border-border hover:bg-muted text-slate-400 hover:text-primary transition-all shadow-sm active:scale-95"
                   >
-                    <Edit2 className="h-4.5 w-4.5" />
+                    <Edit2 className="h-5 w-5" />
                   </button>
-                  <button className="p-3.5 rounded-2xl border border-border hover:bg-muted text-slate-400 transition-all opacity-20 group-hover:opacity-100">
-                    <MoreVertical className="h-4.5 w-4.5" />
+                  <button className="p-4 rounded-2xl border border-border hover:bg-muted text-slate-400 transition-all opacity-10 group-hover:opacity-100">
+                    <MoreVertical className="h-5 w-5" />
                   </button>
                 </div>
               </div>
