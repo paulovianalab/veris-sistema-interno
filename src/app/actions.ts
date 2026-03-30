@@ -41,6 +41,7 @@ export async function createProposalAction(formData: FormData) {
   const status = formData.get("status") as string;
   const content = formData.get("content") as string;
   const link = formData.get("link") as string;
+  const selectedServices = formData.get("selectedServices") as string;
 
   await prisma.proposal.create({
     data: {
@@ -50,6 +51,7 @@ export async function createProposalAction(formData: FormData) {
       status,
       content,
       link,
+      selectedServices,
     },
   });
 
@@ -65,6 +67,7 @@ export async function updateProposalAction(id: string, formData: FormData) {
   const status = formData.get("status") as string;
   const content = formData.get("content") as string;
   const link = formData.get("link") as string;
+  const selectedServices = formData.get("selectedServices") as string;
 
   await prisma.proposal.update({
     where: { id },
@@ -75,6 +78,7 @@ export async function updateProposalAction(id: string, formData: FormData) {
       status,
       content,
       link,
+      selectedServices,
     },
   });
 

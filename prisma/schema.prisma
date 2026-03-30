@@ -38,18 +38,19 @@ model Task {
 }
 
 model Proposal {
-  id        String   @id @default(cuid())
-  title     String
-  status    String   // "Aprovada", "Enviada", "Recusada"
-  value     Float
-  link      String?  // URL da LP ou PDF
-  content   String?  // Detalhes da Proposta (Escopo)
-  acceptedAt DateTime? // Data de aceite online
-  clientId  String?
-  client    Client?  @relation(fields: [clientId], references: [id])
-  date      DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String   @id @default(cuid())
+  title            String
+  status           String   // "Aprovada", "Enviada", "Recusada"
+  value            Float
+  link             String?  // URL da LP ou PDF
+  content          String?  // Detalhes da Proposta (Escopo)
+  selectedServices String?  // JSON array de serviços selecionados
+  acceptedAt       DateTime? // Data de aceite online
+  clientId         String?
+  client           Client?  @relation(fields: [clientId], references: [id])
+  date             DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model Note {

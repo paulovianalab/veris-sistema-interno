@@ -3,12 +3,20 @@
 import { motion } from "framer-motion";
 import { useTheme } from "./ThemeProvider";
 
-export default function ActivityChart() {
+interface ActivityChartProps {
+  data?: number[];
+  labels?: string[];
+}
+
+export default function ActivityChart({ 
+  data = [30, 45, 35, 80, 50, 70, 90], 
+  labels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"] 
+}: ActivityChartProps) {
   const { theme } = useTheme();
   
-  // Mock data points
-  const data = [30, 45, 35, 80, 50, 70, 90];
-  const labels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
+  // Normalization: Find max to scale correctly
+  const maxVal = Math.max(...data, 10); // at least 10 to avoid div by zero
+
   
   // SVG Viewport: 1000x200
   const width = 1000;
@@ -17,12 +25,15 @@ export default function ActivityChart() {
   
   // Calculate points
   const points = data.map((d, i) => ({
-    x: (i * (width / (data.length - 1))),
-    y: height - padding - (d / 100) * (height - padding * 2)
+    x: data.length > 1 ? (i * (width / (data.length - 1))) : width / 2,
+    y: height - padding - (d / maxVal) * (height - padding * 2)
   }));
 
   // Create SVG path (Bezier curve)
   const drawPath = () => {
+    if (points.length === 0) return "";
+    if (points.length === 1) return `M ${points[0].x - 5} ${points[0].y} L ${points[0].x + 5} ${points[0].y}`;
+    
     let d = `M ${points[0].x} ${points[0].y}`;
     for (let i = 0; i < points.length - 1; i++) {
       const curr = points[i];
@@ -35,7 +46,9 @@ export default function ActivityChart() {
   };
 
   const path = drawPath();
-  const areaPath = `${path} L ${points[points.length - 1].x} ${height} L ${points[0].x} ${height} Z`;
+  const areaPath = points.length > 1 
+    ? `${path} L ${points[points.length - 1].x} ${height} L ${points[0].x} ${height} Z`
+    : "";
 
   return (
     <div className="w-full space-y-8">
@@ -114,8 +127,16 @@ export default function ActivityChart() {
         </svg>
       </div>
 
-      <div className="flex justify-between text-[9px] font-medium text-muted-foreground/40 uppercase tracking-[0.5em] px-1">
-        {labels.map(l => <span key={l} className="hover:text-primary transition-colors cursor-default">{l}</span>)}
+      <div className="flex justify-between text-[8px] font-medium text-muted-foreground/40 uppercase tracking-[0.2em] px-1">
+        {labels.map((l, i) => (
+          <span 
+            key={`${l}-${i}`} 
+            className="flex-1 text-center truncate hover:text-primary transition-colors cursor-default"
+            title={l}
+          >
+            {l}
+          </span>
+        ))}
       </div>
     </div>
   );

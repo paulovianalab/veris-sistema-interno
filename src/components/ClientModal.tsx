@@ -15,7 +15,8 @@ const verisServices = [
   "SEO & Conteúdo",
   "Social Media",
   "Lojas & Landings",
-  "Chatbot Humanizado"
+  "Chatbot Humanizado",
+  "Branding"
 ];
 
 export default function ClientModal({ isOpen, onClose, client }: ClientModalProps) {

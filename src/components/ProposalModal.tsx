@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { X, Loader2, Trash2, Link as LinkIcon, FileText } from "lucide-react";
 import { createProposalAction, updateProposalAction, deleteProposalAction } from "@/app/actions";
 
@@ -11,11 +11,56 @@ interface ProposalModalProps {
   clients: { id: string, name: string, company?: string | null }[];
 }
 
+const servicesData = {
+  ia: {
+    label: "IA de Atendimento",
+    scope: "Atendimento 24/7, IA Treinada no modelo da empresa, Qualificação de Leads. Investimento: Implementação + Mensalidade R$ 300."
+  },
+  ecommerce: {
+    label: "E-commerce",
+    scope: "Design de Banners, Gestão de Catálogo, Ecossistema de Pagamentos e Logística. Prazo: 20 dias úteis. Mensalidade plataforma: a partir de R$ 69."
+  },
+  social: {
+    label: "Social Media & Tráfego",
+    scope: "Gestão de 12 posts (4 vídeos) + Tráfego Estratégico em Meta e Google focado em performance."
+  },
+  site: {
+    label: "Site",
+    scope: "Design Premium focado em conversão. Entrega a partir de 5 dias. Exemplos: Agência Seu Destino, Cookiery, Souza Jr Adv."
+  },
+  branding: {
+    label: "Branding",
+    scope: "Estratégia de marca, Identidade Visual completa (Logo, Cores, Tipografia) e Manual da Marca. Entrega em arquivos PNG, PDF e Vetoriais."
+  }
+};
+
 export default function ProposalModal({ isOpen, onClose, proposal, clients }: ProposalModalProps) {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedServices, setSelectedServices] = useState<string[]>(
+    proposal?.selectedServices ? JSON.parse(proposal.selectedServices) : []
+  );
 
   if (!isOpen) return null;
+
+  const generateScope = useMemo(() => {
+    if (selectedServices.length === 0) return "";
+    
+    const selectedTexts = selectedServices.map((serviceKey) => {
+      const service = servicesData[serviceKey as keyof typeof servicesData];
+      return service?.scope || "";
+    });
+
+    return selectedTexts.join("\n\n");
+  }, [selectedServices]);
+
+  const toggleService = (serviceKey: string) => {
+    setSelectedServices((prev) =>
+      prev.includes(serviceKey)
+        ? prev.filter((s) => s !== serviceKey)
+        : [...prev, serviceKey]
+    );
+  };
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -23,6 +68,8 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
     setError(null);
 
     const formData = new FormData(event.currentTarget);
+    formData.set("content", generateScope);
+    formData.set("selectedServices", JSON.stringify(selectedServices));
     
     try {
       if (proposal) {
@@ -104,15 +151,31 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
             </div>
           </div>
 
-          <div className="space-y-2.5">
-            <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Escopo da Proposta / Detalhes do Serviço</label>
-            <textarea 
-              name="content" 
-              defaultValue={proposal?.content} 
-              rows={4}
-              placeholder="Descreva aqui o que será entregue, cronograma e diferenciais..."
-              className="w-full bg-background border border-border rounded-2xl p-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium placeholder:text-muted-foreground/30 text-sm resize-none"
-            />
+          <div className="space-y-3">
+            <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Serviços (Escopo Automático)</label>
+            <div className="space-y-2.5">
+              {Object.entries(servicesData).map(([key, service]) => (
+                <div key={key} className="flex items-start gap-3 p-3 rounded-xl border border-border bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group"
+                  onClick={() => toggleService(key)}>
+                  <input 
+                    type="checkbox" 
+                    checked={selectedServices.includes(key)}
+                    onChange={() => toggleService(key)}
+                    className="w-5 h-5 mt-0.5 rounded border-border bg-background cursor-pointer accent-primary"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">{service.label}</p>
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{service.scope}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {selectedServices.length > 0 && (
+              <div className="mt-4 p-4 bg-primary/5 border border-primary/20 rounded-xl">
+                <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-primary mb-2">Escopo Gerado:</p>
+                <p className="text-xs text-foreground whitespace-pre-line leading-relaxed">{generateScope}</p>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-6">

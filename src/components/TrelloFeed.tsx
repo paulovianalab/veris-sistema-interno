@@ -5,22 +5,24 @@ import { ExternalLink, MoreVertical, Layout, CheckCircle2 } from "lucide-react";
 import { getTrelloDataAction } from "@/app/actions";
 import { cn } from "@/lib/utils";
 
-export default function TrelloFeed() {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+export default function TrelloFeed({ initialData }: { initialData?: any }) {
+  const [data, setData] = useState<any>(initialData || null);
+  const [loading, setLoading] = useState(!initialData);
 
   const fetchData = async () => {
-    setLoading(true);
+    if (!initialData) setLoading(true);
     const result = await getTrelloDataAction();
     setData(result);
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (!initialData) {
+      fetchData();
+    }
+  }, [initialData]);
 
-  if (loading) {
+  if (loading && !data) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map((i) => (

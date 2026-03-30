@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/components";
 import { Users, FileText, CheckSquare, Target, TrendingUp, Calendar, Eye, EyeOff, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PrivacyValue, PrivacyToggle } from "@/components/PrivacyToggle";
+import { getTrelloDataAction } from "@/app/actions";
 import ActivityChart from "@/components/ActivityChart";
 
 export const dynamic = 'force-dynamic';
@@ -19,9 +20,10 @@ export default async function DashboardPage() {
   let newClientsThisMonth = 0;
   let prevMonthClientsCount = 0;
   let settings: any = null;
+  let trelloData: any = null;
 
   try {
-    [clients, tasks, events, newClientsThisMonth, prevMonthClientsCount, settings] = await Promise.all([
+    [clients, tasks, events, newClientsThisMonth, prevMonthClientsCount, settings, trelloData] = await Promise.all([
       prisma.client.findMany({ orderBy: { createdAt: 'desc' } }),
       prisma.task.findMany({
         where: { status: "Pendente" },
@@ -46,7 +48,8 @@ export default async function DashboardPage() {
           } 
         }
       }),
-      prisma.setting.findUnique({ where: { id: "global" } })
+      prisma.setting.findUnique({ where: { id: "global" } }),
+      getTrelloDataAction()
     ]);
   } catch (err) {
     console.error("Erro ao carregar dados do dashboard:", err);
@@ -70,6 +73,12 @@ export default async function DashboardPage() {
   const clientGrowth = prevMonthClientsCount === 0 
     ? newClientsThisMonth * 100 
     : Math.round(((newClientsThisMonth - prevMonthClientsCount) / prevMonthClientsCount) * 100);
+
+  // Process Trello data for chart
+  const trelloLabels = trelloData?.lists?.map((l: any) => l.name) || ["Sem Dados"];
+  const trelloChartData = trelloData?.lists?.map((l: any) => 
+    trelloData.cards.filter((c: any) => c.idList === l.id).length
+  ) || [0];
 
   const getStatusBadge = (status: string) => {
     switch(status) {
@@ -218,7 +227,7 @@ export default async function DashboardPage() {
              </div>
              {/* Modern Activity Chart */}
              <div className="pt-4 pb-2">
-                <ActivityChart />
+                <ActivityChart data={trelloChartData} labels={trelloLabels} />
              </div>
           </div>
         </div>
