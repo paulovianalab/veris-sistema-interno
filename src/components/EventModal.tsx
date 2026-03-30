@@ -9,9 +9,10 @@ interface EventModalProps {
   onClose: () => void;
   selectedDate: Date | null;
   event?: any;
+  clients: any[];
 }
 
-export default function EventModal({ isOpen, onClose, selectedDate, event }: EventModalProps) {
+export default function EventModal({ isOpen, onClose, selectedDate, event, clients }: EventModalProps) {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -72,6 +73,20 @@ export default function EventModal({ isOpen, onClose, selectedDate, event }: Eve
               placeholder="Ex: Reunião de Alinhamento"
               className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium placeholder:text-muted-foreground/30 text-sm"
             />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Cliente Associado (Opcional)</label>
+            <select 
+              name="clientId" 
+              defaultValue={event?.clientId || ""} 
+              className="w-full h-12 bg-background border border-border rounded-2xl px-4 text-foreground focus:ring-2 focus:ring-primary/50 outline-none font-medium text-sm appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_1rem_center] bg-no-repeat"
+            >
+              <option value="">Nenhum Cliente</option>
+              {clients.map(c => (
+                <option key={c.id} value={c.id}>{c.company || c.name}</option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-2 gap-5">

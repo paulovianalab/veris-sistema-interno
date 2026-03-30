@@ -8,9 +8,13 @@ export default async function AgendaPage() {
     orderBy: { date: "asc" }
   });
 
+  const clients = await prisma.client.findMany({
+    orderBy: { name: "asc" }
+  });
+
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-10 animate-in fade-in duration-500">
-      <AgendaGrid events={events} />
+      <AgendaGrid events={events} clients={clients} />
     </div>
   );
 }

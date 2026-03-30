@@ -6,9 +6,10 @@ import EventModal from "@/components/EventModal";
 
 interface AgendaGridProps {
   events: any[];
+  clients: any[];
 }
 
-export default function AgendaGrid({ events }: AgendaGridProps) {
+export default function AgendaGrid({ events, clients }: AgendaGridProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
@@ -151,6 +152,7 @@ export default function AgendaGrid({ events }: AgendaGridProps) {
         onClose={() => setIsModalOpen(false)} 
         selectedDate={selectedDate} 
         event={selectedEvent} 
+        clients={clients}
       />
     </>
   );

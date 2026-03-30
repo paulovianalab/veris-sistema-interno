@@ -21,6 +21,7 @@ model Client {
   proposals    Proposal[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+  events       Event[]
 }
 
 model Task {
@@ -63,6 +64,8 @@ model Event {
   description String?
   date        DateTime
   type        String   // "Reunião", "Projeto", "Lembrete"
+  clientId    String?
+  client      Client?  @relation(fields: [clientId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

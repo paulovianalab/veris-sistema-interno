@@ -252,13 +252,20 @@ export async function createEventAction(formData: FormData) {
   const description = formData.get("description") as string;
   const dateStr = formData.get("date") as string;
   const timeStr = formData.get("time") as string;
+  const clientId = formData.get("clientId") as string;
   
   // Combina data e hora para salvar no banco
   const fullDate = new Date(`${dateStr}T${timeStr}:00`);
   const type = formData.get("type") as string;
 
   await prisma.event.create({
-    data: { title, description, date: fullDate, type },
+    data: { 
+      title, 
+      description, 
+      date: fullDate, 
+      type,
+      clientId: clientId || null 
+    },
   });
 
   revalidatePath("/agenda");
