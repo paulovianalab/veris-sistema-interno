@@ -35,15 +35,15 @@ const servicesData = {
 };
 
 export default function ProposalModal({ isOpen, onClose, proposal, clients }: ProposalModalProps) {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedServices, setSelectedServices] = useState<string[]>(
-    proposal?.selectedServices ? JSON.parse(proposal.selectedServices) : []
-  );
+   const [isPending, setIsPending] = useState(false);
+   const [error, setError] = useState<string | null>(null);
+   const [selectedServices, setSelectedServices] = useState<string[]>(
+     proposal?.selectedServices ? JSON.parse(proposal.selectedServices) : []
+   );
 
-  if (!isOpen) return null;
+   if (!isOpen) return <></>;
 
-  const generateScope = useMemo(() => {
+   const generateScope = useMemo(() => {
     if (selectedServices.length === 0) return "";
     
     const selectedTexts = selectedServices.map((serviceKey) => {
