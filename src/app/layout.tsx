@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Sidebar, MobileNav } from "@/components/Navigation";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PrivacyProvider } from "@/components/PrivacyToggle";
 
 export const metadata: Metadata = {
   title: "Veris Dashboard",
@@ -35,7 +36,9 @@ export default async function RootLayout({
       </head>
       <body className="min-h-full bg-background text-foreground font-sans selection:bg-primary/30">
         <ThemeProvider>
-          {children}
+          <PrivacyProvider>
+            {children}
+          </PrivacyProvider>
         </ThemeProvider>
       </body>
     </html>

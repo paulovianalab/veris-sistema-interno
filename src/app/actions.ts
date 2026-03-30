@@ -94,6 +94,8 @@ export async function createClientAction(formData: FormData) {
   const monthlyValue = parseFloat((formData.get("monthlyValue") as string) || "0");
   const instagram = formData.get("instagram") as string;
 
+  const services = formData.getAll("services").join(", ");
+
   await prisma.client.create({
     data: {
       name,
@@ -101,6 +103,7 @@ export async function createClientAction(formData: FormData) {
       type,
       monthlyValue,
       instagram,
+      services,
     },
   });
 
@@ -116,6 +119,8 @@ export async function updateClientAction(id: string, formData: FormData) {
   const monthlyValue = parseFloat((formData.get("monthlyValue") as string) || "0");
   const instagram = formData.get("instagram") as string;
 
+  const services = formData.getAll("services").join(", ");
+
   await prisma.client.update({
     where: { id },
     data: {
@@ -124,6 +129,7 @@ export async function updateClientAction(id: string, formData: FormData) {
       type,
       monthlyValue,
       instagram,
+      services,
     },
   });
 
@@ -283,10 +289,12 @@ export async function updateSettingsAction(formData: FormData) {
   const agencyName = formData.get("agencyName") as string;
   const theme = formData.get("theme") as string;
 
+  const weeklyGoal = parseFloat(formData.get("weeklyGoal") as string || "5000");
+
   await prisma.setting.upsert({
     where: { id: "global" },
-    update: { agencyName, theme },
-    create: { id: "global", agencyName, theme },
+    update: { agencyName, theme, weeklyGoal },
+    create: { id: "global", agencyName, theme, weeklyGoal },
   });
 
   revalidatePath("/");

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "@/components/ThemeProvider";
-import { Settings, Moon, Sun, User, Building, Shield, ChevronRight, Save, Loader2 } from "lucide-react";
+import { Settings, Moon, Sun, User, Building, Shield, ChevronRight, Save, Loader2, Trophy, Eye } from "lucide-react";
 import { useState } from "react";
 import { updateSettingsAction } from "@/app/actions";
 
@@ -9,11 +9,12 @@ interface SettingsFormProps {
   initialData: {
     agencyName: string | null;
     theme: string | null;
+    weeklyGoal: number | null;
   } | null;
 }
 
 export default function SettingsForm({ initialData }: SettingsFormProps) {
-  const { theme, toggleTheme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [isPending, setIsPending] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -35,95 +36,129 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
   }
 
   return (
-    <div className="p-6 md:p-10 max-w-4xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Sistema</h2>
-        <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-4">
-           Configurações
+    <div className="p-8 md:p-12 max-w-5xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex flex-col gap-3 border-b border-border pb-10">
+        <p className="text-[10px] font-medium uppercase tracking-[0.4em] text-primary/60 mb-1">Customização</p>
+        <h1 className="text-4xl font-light tracking-tight text-foreground flex items-center gap-4">
+           Configurações do Sistema
         </h1>
-        <p className="text-muted-foreground font-medium">Personalize a identidade e aparência do seu Veris Dashboard.</p>
+        <p className="text-muted-foreground font-medium text-sm">Gerencie a identidade visual e as metas estratégicas da Veris Digital.</p>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-10">
+      <form onSubmit={handleSave} className="space-y-14">
         {/* Aparência */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-border pb-4">
-             <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Preferências Visuais</h2>
-             <div className="h-1 w-20 bg-primary/20 rounded-full" />
+        <section className="space-y-8">
+          <div className="flex items-center gap-4 px-2">
+             <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                <Sun className="h-4 w-4" />
+             </div>
+             <h2 className="text-xs font-medium uppercase tracking-[0.3em] text-foreground/80">Interface & Aparência</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <button
               type="button"
               onClick={() => setTheme("light")}
-              className={`flex items-center justify-between p-6 rounded-[2rem] border-2 transition-all duration-300 shadow-xl ${
+              className={`flex items-center justify-between p-8 rounded-[2.5rem] border transition-all duration-300 ${
                 theme === "light" 
-                  ? "border-primary bg-primary/[0.03] scale-[1.02]" 
+                  ? "border-primary bg-primary/[0.03] ring-4 ring-primary/5 shadow-2xl shadow-primary/10" 
                   : "border-border bg-card/40 hover:bg-card hover:border-primary/20"
               }`}
             >
-              <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-2xl transition-all ${theme === "light" ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-muted text-muted-foreground"}`}>
+              <div className="flex items-center gap-5">
+                <div className={`p-4 rounded-2xl transition-all ${theme === "light" ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-muted text-muted-foreground"}`}>
                   <Sun className="h-6 w-6" />
                 </div>
                 <div className="text-left">
-                  <p className="font-black text-foreground tracking-tight">Tema Claro</p>
-                  <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-0.5 opacity-70">Ambientes Iluminados</p>
+                  <p className="font-medium text-foreground text-lg tracking-tight leading-none mb-1">Claro</p>
+                  <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-widest opacity-70">Daylight optimized</p>
                 </div>
               </div>
-              {theme === "light" && <div className="h-3 w-3 rounded-full bg-primary animate-pulse" />}
+              {theme === "light" && <div className="h-2 w-2 rounded-full bg-primary" />}
             </button>
 
             <button
               type="button"
               onClick={() => setTheme("dark")}
-              className={`flex items-center justify-between p-6 rounded-[2rem] border-2 transition-all duration-300 shadow-xl ${
+              className={`flex items-center justify-between p-8 rounded-[2.5rem] border transition-all duration-300 ${
                 theme === "dark" 
-                  ? "border-primary bg-primary/[0.03] scale-[1.02]" 
+                  ? "border-primary bg-primary/[0.03] ring-4 ring-primary/5 shadow-2xl shadow-primary/10" 
                   : "border-border bg-card/40 hover:bg-card hover:border-primary/20"
               }`}
             >
-              <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-2xl transition-all ${theme === "dark" ? "bg-primary text-white shadow-lg shadow-primary/30" : "bg-muted text-muted-foreground"}`}>
+              <div className="flex items-center gap-5">
+                <div className={`p-4 rounded-2xl transition-all ${theme === "dark" ? "bg-primary text-white shadow-lg shadow-primary/30" : "bg-muted text-muted-foreground"}`}>
                   <Moon className="h-6 w-6" />
                 </div>
                 <div className="text-left">
-                  <p className="font-black text-foreground tracking-tight">Tema Escuro</p>
-                  <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-0.5 opacity-70">Longas Sessões</p>
+                  <p className="font-medium text-foreground text-lg tracking-tight leading-none mb-1">Escuro</p>
+                  <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-widest opacity-70">Premium dark mode</p>
                 </div>
               </div>
-              {theme === "dark" && <div className="h-3 w-3 rounded-full bg-primary animate-pulse" />}
+              {theme === "dark" && <div className="h-2 w-2 rounded-full bg-primary" />}
             </button>
           </div>
         </section>
 
-        {/* Agência */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-border pb-4">
-             <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Identidade da Agência</h2>
-             <div className="h-1 w-20 bg-primary/20 rounded-full" />
+        {/* Metas Estratégicas */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-4 px-2">
+             <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                <Trophy className="h-4 w-4" />
+             </div>
+             <h2 className="text-xs font-medium uppercase tracking-[0.3em] text-foreground/80">Objetivos & Metas</h2>
           </div>
-          <div className="bg-card border border-border rounded-[2.5rem] p-8 shadow-2xl space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Nome de Exibição</label>
+          <div className="bg-card border border-border rounded-[2.5rem] p-10 shadow-2xl relative overflow-hidden group">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-2">
+                   <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Meta de Novos Fechamentos (Semanal)</label>
+                   <Eye className="h-3 w-3 text-primary/40" />
+                </div>
                 <div className="relative">
-                  <Building className="absolute left-5 top-4 h-5 w-5 text-muted-foreground" />
+                  <span className="absolute left-6 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">R$</span>
                   <input
-                    name="agencyName"
-                    defaultValue={initialData?.agencyName || "Veris Digital"}
-                    placeholder="Nome da sua agência"
-                    className="w-full h-14 pl-14 pr-5 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/40 outline-none transition-all font-black text-foreground placeholder:text-muted-foreground/30 shadow-inner"
+                    name="weeklyGoal"
+                    type="number"
+                    defaultValue={initialData?.weeklyGoal || 5000}
+                    className="w-full h-16 pl-14 pr-6 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/40 outline-none transition-all font-medium text-foreground text-xl shadow-inner scroll-none"
                   />
                 </div>
+                <p className="text-[10px] text-muted-foreground font-medium italic opacity-60">Este valor define o progresso da barra exibida no Dashboard principal.</p>
+              </div>
+              <div className="flex flex-col justify-center p-6 bg-primary/5 rounded-3xl border border-primary/10">
+                 <h4 className="text-xs font-medium uppercase tracking-widest text-primary mb-2">Por que definir metas?</h4>
+                 <p className="text-xs text-muted-foreground leading-relaxed italic">"Ter uma meta clara de R$ 5.000 por semana ajuda a Veris a manter o ritmo de crescimento e focar na prospecção ativa."</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Agência */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-4 px-2">
+             <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                <Building className="h-4 w-4" />
+             </div>
+             <h2 className="text-xs font-medium uppercase tracking-[0.3em] text-foreground/80">Perfil da Agência</h2>
+          </div>
+          <div className="bg-card border border-border rounded-[3rem] p-10 shadow-2xl space-y-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-3">
+                <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest ml-1">Nome de Marca</label>
+                <input
+                  name="agencyName"
+                  defaultValue={initialData?.agencyName || "Veris Digital"}
+                  className="w-full h-14 px-6 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-primary/40 outline-none transition-all font-medium text-foreground tracking-tight text-lg"
+                />
               </div>
               <div className="space-y-3">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">E-mail Administrativo</label>
+                <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest ml-1">E-mail de Suporte Integrado</label>
                 <div className="relative">
-                  <User className="absolute left-5 top-4 h-5 w-5 text-muted-foreground opacity-50" />
+                  <User className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/30" />
                   <input
-                    defaultValue="digitalveris@gmail.com"
+                    defaultValue="contato@veris.com.br"
                     readOnly
-                    className="w-full h-14 pl-14 pr-5 bg-muted/30 border border-border/50 rounded-2xl text-muted-foreground cursor-not-allowed italic font-bold opacity-60"
+                    className="w-full h-14 pl-14 pr-6 bg-muted/20 border border-border/50 rounded-2xl text-muted-foreground cursor-not-allowed italic font-medium opacity-50 text-sm"
                   />
                 </div>
               </div>
@@ -131,40 +166,18 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
           </div>
         </section>
 
-        {/* Segurança */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-border pb-4">
-             <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Segurança da Conta</h2>
-             <div className="h-1 w-20 bg-rose-500/20 rounded-full" />
-          </div>
-          <div className="bg-card border border-border rounded-[2.5rem] overflow-hidden shadow-2xl">
-            <button type="button" className="w-full flex items-center justify-between p-6 hover:bg-muted/30 transition-all group">
-              <div className="flex items-center gap-5">
-                <div className="p-4 rounded-2xl bg-muted text-muted-foreground transition-all group-hover:bg-primary group-hover:text-white shadow-sm">
-                  <Shield className="h-6 w-6" />
-                </div>
-                <div className="text-left">
-                  <p className="font-black text-foreground tracking-tight">Redefinir Senha Administradora</p>
-                  <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest mt-0.5 opacity-60">Segurança de acesso ao painel</p>
-                </div>
-              </div>
-              <ChevronRight className="h-6 w-6 text-muted-foreground group-hover:translate-x-2 transition-transform" />
-            </button>
-          </div>
-        </section>
-
-        <div className="pt-10 flex flex-col items-center gap-6">
+        <div className="pt-12 flex flex-col items-center gap-8">
           {message && (
-            <div className="p-4 px-10 bg-primary/10 text-primary border border-primary/20 rounded-full text-xs font-black uppercase tracking-widest animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300 shadow-2xl shadow-primary/10">
+            <div className="py-3 px-8 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-full text-xs font-medium uppercase tracking-widest animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300">
               {message}
             </div>
           )}
           <button
             type="submit"
             disabled={isPending}
-            className="w-full md:w-auto min-w-[280px] h-16 bg-primary text-white rounded-[2rem] font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-primary/30 flex items-center justify-center gap-4 group"
+            className="w-full md:w-auto min-w-[320px] h-16 bg-primary text-white rounded-[2.5rem] font-medium text-lg hover:brightness-110 active:scale-95 transition-all shadow-2xl shadow-primary/30 flex items-center justify-center gap-4 group uppercase tracking-widest text-xs"
           >
-            {isPending ? <Loader2 className="h-6 w-6 animate-spin" /> : <><Save className="h-6 w-6 transition-transform group-hover:rotate-12" /> Salvar Configurações</>}
+            {isPending ? <Loader2 className="h-6 w-6 animate-spin" /> : <><Save className="h-5 w-5 group-hover:scale-110 transition-transform" /> Efetuar Alterações</>}
           </button>
         </div>
       </form>

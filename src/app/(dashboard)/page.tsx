@@ -1,8 +1,9 @@
 import prisma from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/components";
-import { Users, FileText, CheckSquare, Target, TrendingUp, Calendar } from "lucide-react";
+import { Users, FileText, CheckSquare, Target, TrendingUp, Calendar, Eye, EyeOff, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PrivacyValue, PrivacyToggle } from "@/components/PrivacyToggle";
 
 export const dynamic = 'force-dynamic';
 
@@ -16,9 +17,10 @@ export default async function DashboardPage() {
   let events: any[] = [];
   let newClientsThisMonth = 0;
   let prevMonthClientsCount = 0;
+  let settings: any = null;
 
   try {
-    [clients, tasks, events, newClientsThisMonth, prevMonthClientsCount] = await Promise.all([
+    [clients, tasks, events, newClientsThisMonth, prevMonthClientsCount, settings] = await Promise.all([
       prisma.client.findMany({ orderBy: { createdAt: 'desc' } }),
       prisma.task.findMany({
         where: { status: "Pendente" },
@@ -42,11 +44,22 @@ export default async function DashboardPage() {
             lt: firstDayOfMonth
           } 
         }
-      })
+      }),
+      prisma.setting.findUnique({ where: { id: "global" } })
     ]);
   } catch (err) {
     console.error("Erro ao carregar dados do dashboard:", err);
   }
+
+  const weeklyGoal = settings?.weeklyGoal || 5000;
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(now.getDate() - 7);
+
+  const newRevenueThisWeek = clients
+    .filter(c => new Date(c.createdAt) >= sevenDaysAgo && c.type === "Ativo")
+    .reduce((acc, curr) => acc + curr.monthlyValue, 0);
+  
+  const goalProgress = Math.min(Math.round((newRevenueThisWeek / weeklyGoal) * 100), 100);
 
   const activeClients = clients.filter(c => c.type === "Ativo").length;
   const monthlyRevenue = clients
@@ -123,17 +136,45 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="premium-card p-6 bg-primary text-primary-foreground border-none">
-          <div className="flex items-center justify-between">
-             <span className="text-[10px] font-medium uppercase tracking-widest opacity-70">Faturamento Mensal</span>
-             <TrendingUp className="h-4 w-4 opacity-70" />
+        <div className="premium-card p-6 border-2 border-primary/20 bg-primary/5 relative overflow-hidden group">
+          <div className="flex items-center justify-between relative z-10">
+             <span className="text-[10px] font-medium uppercase tracking-widest text-primary">Meta Semanal (Novos)</span>
+             <Trophy className="h-4 w-4 text-primary animate-bounce shadow-sm" />
           </div>
-          <div>
-            <div className="text-3xl font-light">R$ {monthlyRevenue.toLocaleString('pt-BR')}</div>
-            <div className="h-1 w-full bg-white/20 rounded-full mt-4 overflow-hidden">
-               <div className="h-full bg-white w-3/4" />
+          <div className="relative z-10 mt-4">
+            <div className="text-3xl font-light text-foreground flex items-baseline gap-2">
+              <PrivacyValue value={newRevenueThisWeek} />
+              <span className="text-xs text-muted-foreground">/ R$ {weeklyGoal.toLocaleString('pt-BR')}</span>
+            </div>
+            <div className="h-1.5 w-full bg-primary/10 rounded-full mt-4 overflow-hidden border border-primary/5">
+               <div 
+                 className="h-full bg-primary transition-all duration-1000 ease-out" 
+                 style={{ width: `${goalProgress}%` }} 
+               />
+            </div>
+            <p className="text-[9px] font-medium text-primary mt-2 uppercase tracking-widest">{goalProgress}% da meta alcançada</p>
+          </div>
+          <div className="absolute -right-4 -bottom-4 h-24 w-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all" />
+        </div>
+
+        <div className="premium-card p-6 bg-primary text-primary-foreground border-none shadow-xl shadow-primary/20 relative overflow-hidden">
+          <div className="flex items-center justify-between relative z-10">
+             <span className="text-[10px] font-medium uppercase tracking-widest opacity-80">Faturamento Mensal</span>
+             <div className="flex items-center gap-2">
+                <PrivacyToggle />
+                <TrendingUp className="h-4 w-4 opacity-70" />
+             </div>
+          </div>
+          <div className="relative z-10 mt-4">
+            <div className="text-3xl font-light">
+              <PrivacyValue value={monthlyRevenue} />
+            </div>
+            <div className="mt-4 flex items-center justify-between text-[10px] font-medium opacity-60 uppercase tracking-widest">
+               <span>Total Ativo</span>
+               <span>100% Veris</span>
             </div>
           </div>
+          <div className="absolute -right-2 -top-2 h-20 w-20 bg-white/10 rounded-full blur-2xl" />
         </div>
       </div>
 
@@ -161,7 +202,9 @@ export default async function DashboardPage() {
                   </div>
                   <div className="flex items-center gap-8">
                     <div className="text-right hidden sm:block">
-                      <p className="text-xs font-medium text-foreground">R$ {client.monthlyValue.toLocaleString('pt-BR')}</p>
+                      <div className="text-xs font-medium text-foreground">
+                        <PrivacyValue value={client.monthlyValue} />
+                      </div>
                       <p className="text-[9px] text-muted-foreground font-medium uppercase">Mensal</p>
                     </div>
                     {getStatusBadge(client.type)}
