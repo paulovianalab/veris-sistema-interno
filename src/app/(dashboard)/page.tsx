@@ -1,8 +1,9 @@
 import prisma from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/components";
-import { Users, FileText, CheckSquare, Target, TrendingUp, Calendar } from "lucide-react";
+import { Users, FileText, CheckSquare, Target, TrendingUp, Calendar, Layout, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
+import TrelloFeed from "@/components/TrelloFeed";
 
 export const dynamic = 'force-dynamic';
 
@@ -135,6 +136,27 @@ export default async function DashboardPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Trello Feed Section */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between px-2">
+           <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-sm border border-primary/20">
+                 <Layout className="h-4 w-4" />
+              </div>
+              <h3 className="text-sm font-medium uppercase tracking-[0.3em] text-foreground/80">Cronograma de Postagens</h3>
+           </div>
+           <a 
+             href="https://trello.com/b/fgdLBqgJ/cronograma-postagens" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             className="text-[10px] font-medium text-primary hover:underline uppercase tracking-[0.2em] flex items-center gap-2 mr-2"
+           >
+             Gerenciar no Trello <ExternalLink className="h-3 w-3" />
+           </a>
+        </div>
+        <TrelloFeed />
       </div>
 
       <div className="grid gap-8 lg:grid-cols-12">

@@ -297,3 +297,33 @@ export async function updateSettingsAction(formData: FormData) {
 export async function getSettings() {
   return await prisma.setting.findUnique({ where: { id: "global" } });
 }
+
+// Trello Actions
+export async function getTrelloDataAction() {
+  const key = process.env.TRELLO_KEY;
+  const token = process.env.TRELLO_TOKEN;
+  const boardId = process.env.TRELLO_BOARD_ID;
+
+  if (!key || !token || !boardId) {
+    return { error: "Configuração do Trello ausente no servidor." };
+  }
+
+  try {
+    const [listsRes, cardsRes] = await Promise.all([
+      fetch(`https://api.trello.com/1/boards/${boardId}/lists?key=${key}&token=${token}&fields=name,id`, { next: { revalidate: 300 } }),
+      fetch(`https://api.trello.com/1/boards/${boardId}/cards?key=${key}&token=${token}&fields=name,idList,url`, { next: { revalidate: 300 } })
+    ]);
+
+    if (!listsRes.ok || !cardsRes.ok) {
+      return { error: "Falha na resposta da API do Trello." };
+    }
+
+    const lists = await listsRes.json();
+    const cards = await cardsRes.json();
+
+    return { lists, cards };
+  } catch (err) {
+    console.error("Erro Trello:", err);
+    return { error: "Erro de conexão com o Trello." };
+  }
+}
