@@ -26,7 +26,11 @@ export function Sidebar({ name = "Veris Digital" }: { name?: string }) {
       <div className="flex flex-col flex-grow">
         <div className="flex h-20 items-center px-6 border-b border-border/40">
           <Link href="/" className="flex items-center">
-            <img src="/logo-veris.png" alt="Veris" className="h-7 w-auto object-contain dark:brightness-200" />
+            <img 
+              src={theme === "light" ? "/images/logo-veris-black.png" : "/logo-veris.png"} 
+              alt="Veris" 
+              className="h-7 w-auto object-contain" 
+            />
             <span className="ml-2.5 text-[9px] font-medium uppercase tracking-[0.4em] text-primary/60 opacity-60">
               Internal
             </span>
