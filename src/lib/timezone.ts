@@ -149,16 +149,25 @@ export function utcToBrasilia(date: Date): {
 }
 
 /**
- * Formats a UTC date as Brasília time for display
+ * Formats a UTC date as Brasília time in DD/MM/YYYY HH:MM format
  * @param date - Date object in UTC
- * @returns Formatted string in pt-BR locale
+ * @returns Object with formatted date and time
  */
-export function formatBrasiliaTime(date: Date): string {
-  return new Intl.DateTimeFormat('pt-BR', {
-    timeZone: BRASILIA_TIMEZONE,
-    dateStyle: 'short',
-    timeStyle: 'short',
-  }).format(date);
+export function formatBrazilDateTime(date: Date): {
+  dateStr: string;
+  timeStr: string;
+  fullStr: string;
+} {
+  const brasiliaTime = utcToBrasilia(date);
+  
+  const dateStr = `${String(brasiliaTime.day).padStart(2, '0')}/${String(brasiliaTime.month).padStart(2, '0')}/${brasiliaTime.year}`;
+  const timeStr = `${String(brasiliaTime.hour).padStart(2, '0')}:${String(brasiliaTime.minute).padStart(2, '0')}`;
+  
+  return {
+    dateStr,
+    timeStr,
+    fullStr: `${dateStr} ${timeStr}`
+  };
 }
 
 /**

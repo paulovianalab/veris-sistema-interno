@@ -16,15 +16,37 @@ interface EventModalProps {
 export default function EventModal({ isOpen, onClose, selectedDate, event, clients }: EventModalProps) {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [eventDate, setEventDate] = useState<string>("");
-  const [eventTime, setEventTime] = useState<string>("");
+  const [eventDateDisplay, setEventDateDisplay] = useState<string>(""); // DD/MM/YYYY format for display
+  const [eventTimeDisplay, setEventTimeDisplay] = useState<string>(""); // HH:MM format for display
+  const [internalDate, setInternalDate] = useState<string>(""); // YYYY-MM-DD for form submission
+  const [internalTime, setInternalTime] = useState<string>(""); // HH:MM for form submission
+
+  // Helper function to convert DD/MM/YYYY to YYYY-MM-DD
+  const brazilDateToISO = (brazilDate: string): string => {
+    const parts = brazilDate.split('/');
+    if (parts.length === 3) {
+      return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    return "";
+  };
+
+  // Helper function to convert YYYY-MM-DD to DD/MM/YYYY
+  const isoDateToBrazil = (isoDate: string): string => {
+    const parts = isoDate.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return "";
+  };
 
   // Initialize date and time when modal opens or event changes
   useEffect(() => {
     if (!isOpen) {
       // Reset state when modal closes
-      setEventDate("");
-      setEventTime("");
+      setEventDateDisplay("");
+      setEventTimeDisplay("");
+      setInternalDate("");
+      setInternalTime("");
       return;
     }
 
@@ -32,15 +54,39 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
       // Convert UTC date from database to Brasília time
       const eventDateObj = new Date(event.date);
       const brasiliaTime = utcToBrasilia(eventDateObj);
-      setEventDate(brasiliaTime.dateStr);
-      setEventTime(brasiliaTime.timeStr);
+      // Convert to display format (DD/MM/YYYY)
+      const displayDate = isoDateToBrazil(brasiliaTime.dateStr);
+      setEventDateDisplay(displayDate);
+      setEventTimeDisplay(brasiliaTime.timeStr);
+      setInternalDate(brasiliaTime.dateStr);
+      setInternalTime(brasiliaTime.timeStr);
     } else if (selectedDate) {
       // For new events, use the selected date
       const brasiliaTime = utcToBrasilia(selectedDate);
-      setEventDate(brasiliaTime.dateStr);
-      setEventTime("09:00");
+      const displayDate = isoDateToBrazil(brasiliaTime.dateStr);
+      setEventDateDisplay(displayDate);
+      setEventTimeDisplay("09:00");
+      setInternalDate(brasiliaTime.dateStr);
+      setInternalTime("09:00");
     }
   }, [isOpen, event, selectedDate]);
+
+  // Handle date input change (DD/MM/YYYY format)
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEventDateDisplay(value);
+    
+    // Convert to YYYY-MM-DD for form submission
+    const isoDate = brazilDateToISO(value);
+    setInternalDate(isoDate);
+  };
+
+  // Handle time input change (HH:MM format)
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEventTimeDisplay(value);
+    setInternalTime(value);
+  };
 
   if (!isOpen) return <></>;
 
@@ -50,6 +96,14 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
     setError(null);
 
     const formData = new FormData(eventForm.currentTarget);
+    
+    // Use the internal ISO format date for submission
+    if (internalDate) {
+      formData.set("date", internalDate);
+    }
+    if (internalTime) {
+      formData.set("time", internalTime);
+    }
     
     try {
       if (event) {
@@ -117,23 +171,30 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
 
            <div className="grid grid-cols-2 gap-5">
              <div className="space-y-2">
-               <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Data</label>
+               <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Data (DD/MM/YYYY)</label>
                <input 
                  name="date" 
-                 type="date"
-                 value={eventDate}
-                 onChange={(e) => setEventDate(e.target.value)}
+                 type="text"
+                 inputMode="numeric"
+                 placeholder="DD/MM/YYYY"
+                 value={eventDateDisplay}
+                 onChange={handleDateChange}
                  required 
                  className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium appearance-none text-sm"
                />
+               <input 
+                 type="hidden"
+                 name="date-internal" 
+                 value={internalDate}
+               />
              </div>
              <div className="space-y-2">
-               <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Horário</label>
+               <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Horário (HH:MM)</label>
                <input 
                  name="time" 
                  type="time"
-                 value={eventTime}
-                 onChange={(e) => setEventTime(e.target.value)}
+                 value={eventTimeDisplay}
+                 onChange={handleTimeChange}
                  required 
                  className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium appearance-none text-sm"
                />
