@@ -36,19 +36,59 @@ export default async function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
         <script dangerouslySetInnerHTML={{
           __html: `
-            // Protect against external scripts that may cause issues
-            window.__EXTERNAL_SCRIPTS_PROTECTED__ = true;
-            if (typeof window !== 'undefined') {
+            // Comprehensive protection against external scripts and errors
+            (function() {
+              // Protect Element.addEventListener from failing
+              const originalAddEventListener = Element.prototype.addEventListener;
+              Element.prototype.addEventListener = function(...args) {
+                try {
+                  return originalAddEventListener.apply(this, args);
+                } catch (e) {
+                  console.warn('[Security] addEventListener error caught:', e.message);
+                  return undefined;
+                }
+              };
+
+              // Protect document.querySelector from failing
+              const originalQuerySelector = document.querySelector;
+              document.querySelector = function(selector) {
+                try {
+                  const result = originalQuerySelector.call(document, selector);
+                  if (!result) {
+                    console.debug('[Security] querySelector returned null for:', selector);
+                    return null;
+                  }
+                  return result;
+                } catch (e) {
+                  console.warn('[Security] querySelector error caught:', e.message);
+                  return null;
+                }
+              };
+
+              // Protect setTimeout and setInterval from external scripts
               const originalSetTimeout = window.setTimeout;
               window.setTimeout = function(...args) {
                 try {
                   return originalSetTimeout.apply(this, args);
                 } catch (e) {
-                  console.warn('External script error caught:', e);
+                  console.warn('[Security] setTimeout error caught:', e.message);
                   return null;
                 }
               };
-            }
+
+              const originalSetInterval = window.setInterval;
+              window.setInterval = function(...args) {
+                try {
+                  return originalSetInterval.apply(this, args);
+                } catch (e) {
+                  console.warn('[Security] setInterval error caught:', e.message);
+                  return null;
+                }
+              };
+
+              // Mark as protected
+              window.__VERIS_PROTECTED__ = true;
+            })();
           `
         }} />
       </head>

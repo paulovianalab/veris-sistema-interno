@@ -53,7 +53,10 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
      }
    }, [isOpen, proposal]);
 
-   if (!isOpen) return <></>;
+   // Don't render anything if modal is not open
+   if (!isOpen) {
+     return null;
+   }
 
    const generateScope = useMemo(() => {
     if (selectedServices.length === 0) return "";

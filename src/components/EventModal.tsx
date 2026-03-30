@@ -88,7 +88,9 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
     setInternalTime(value);
   };
 
-  if (!isOpen) return <></>;
+  if (!isOpen) {
+    return null;
+  }
 
   async function handleSubmit(eventForm: React.FormEvent<HTMLFormElement>) {
     eventForm.preventDefault();
