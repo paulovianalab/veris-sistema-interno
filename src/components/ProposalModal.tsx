@@ -104,6 +104,17 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
             </div>
           </div>
 
+          <div className="space-y-2.5">
+            <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Escopo da Proposta / Detalhes do Serviço</label>
+            <textarea 
+              name="content" 
+              defaultValue={proposal?.content} 
+              rows={4}
+              placeholder="Descreva aqui o que será entregue, cronograma e diferenciais..."
+              className="w-full bg-background border border-border rounded-2xl p-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium placeholder:text-muted-foreground/30 text-sm resize-none"
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2.5">
               <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Status de Negociação</label>
@@ -119,7 +130,7 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
               </select>
             </div>
             <div className="space-y-2.5">
-              <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Link do Documento (PDF/Doc)</label>
+              <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Link Externo (PDF/Doc) - Opcional</label>
               <div className="relative">
                 <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                 <input 

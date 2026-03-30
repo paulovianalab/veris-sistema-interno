@@ -42,7 +42,9 @@ model Proposal {
   title     String
   status    String   // "Aprovada", "Enviada", "Recusada"
   value     Float
-  link      String?  // PDF URL or External Link
+  link      String?  // URL da LP ou PDF
+  content   String?  // Detalhes da Proposta (Escopo)
+  acceptedAt DateTime? // Data de aceite online
   clientId  String?
   client    Client?  @relation(fields: [clientId], references: [id])
   date      DateTime @default(now())

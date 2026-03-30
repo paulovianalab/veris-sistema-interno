@@ -39,6 +39,7 @@ export async function createProposalAction(formData: FormData) {
   const clientId = formData.get("clientId") as string;
   const value = parseFloat((formData.get("value") as string) || "0");
   const status = formData.get("status") as string;
+  const content = formData.get("content") as string;
   const link = formData.get("link") as string;
 
   await prisma.proposal.create({
@@ -47,11 +48,13 @@ export async function createProposalAction(formData: FormData) {
       clientId: clientId || null,
       value,
       status,
+      content,
       link,
     },
   });
 
   revalidatePath("/propostas");
+  revalidatePath("/");
   return { success: true };
 }
 
@@ -60,6 +63,7 @@ export async function updateProposalAction(id: string, formData: FormData) {
   const clientId = formData.get("clientId") as string;
   const value = parseFloat((formData.get("value") as string) || "0");
   const status = formData.get("status") as string;
+  const content = formData.get("content") as string;
   const link = formData.get("link") as string;
 
   await prisma.proposal.update({
@@ -69,11 +73,27 @@ export async function updateProposalAction(id: string, formData: FormData) {
       clientId: clientId || null,
       value,
       status,
+      content,
       link,
     },
   });
 
   revalidatePath("/propostas");
+  revalidatePath("/");
+  return { success: true };
+}
+
+export async function acceptProposalAction(proposalId: string) {
+  await prisma.proposal.update({
+    where: { id: proposalId },
+    data: {
+      status: "Aprovada",
+      acceptedAt: new Date(),
+    },
+  });
+
+  revalidatePath("/propostas");
+  revalidatePath("/");
   return { success: true };
 }
 

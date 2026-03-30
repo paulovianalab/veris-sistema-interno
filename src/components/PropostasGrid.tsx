@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { PlusCircle, FileText, ExternalLink, Calendar, Search, Edit2, Briefcase } from "lucide-react";
+import { PlusCircle, FileText, ExternalLink, Calendar, Search, Edit2, Briefcase, Sparkles } from "lucide-react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/components";
 import ProposalModal from "@/components/ProposalModal";
 import { PrivacyValue } from "@/components/PrivacyToggle";
@@ -116,17 +117,28 @@ export default function PropostasGrid({ proposals, clients }: PropostasGridProps
                     <Calendar className="h-3.5 w-3.5 text-primary/60" />
                     {new Date(proposal.date).toLocaleDateString('pt-BR')}
                   </div>
-                  {proposal.link && (
-                    <a 
-                      href={proposal.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-primary hover:underline transition-all"
-                      onClick={(e) => e.stopPropagation()}
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/p/${proposal.id}`}
+                      target="_blank"
+                      className="group/link flex items-center gap-2 text-primary font-semibold hover:brightness-110 transition-all"
+                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
                     >
-                      Proposta PDF <ExternalLink className="h-3 w-3" />
-                    </a>
-                  )}
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Proposta Digital
+                    </Link>
+                    {proposal.link && (
+                      <a 
+                        href={proposal.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-muted-foreground/60 hover:text-foreground transition-all ml-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        PDF <ExternalLink className="h-3 w-3" />
+                      </a>
+                    )}
+                  </div>
                </div>
             </div>
           </div>
