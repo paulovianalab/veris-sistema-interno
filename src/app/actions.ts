@@ -283,10 +283,13 @@ export async function createEventAction(formData: FormData) {
   const dateStr = formData.get("date") as string;
   const timeStr = formData.get("time") as string;
   const clientId = formData.get("clientId") as string;
-  
-  // Combina data e hora para salvar no banco
-  const fullDate = new Date(`${dateStr}T${timeStr}:00`);
   const type = formData.get("type") as string;
+
+  // Import timezone utils
+  const { localToBrasilia } = await import("@/lib/timezone");
+  
+  // Convert the input (which is in Brasília timezone) to UTC for storage
+  const fullDate = localToBrasilia(dateStr, timeStr);
 
   await prisma.event.create({
     data: { 

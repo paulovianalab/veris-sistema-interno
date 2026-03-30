@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, PlusCircle, CheckCircle2 } from "lucide-react";
 import EventModal from "@/components/EventModal";
 import { cn } from "@/lib/utils";
+import { utcToBrasilia } from "@/lib/timezone";
 
 interface AgendaGridProps {
   events: any[];
@@ -47,16 +48,24 @@ export default function AgendaGrid({ events, clients }: AgendaGridProps) {
   function openEditModal(event: any, e: React.MouseEvent) {
     e.stopPropagation();
     setSelectedEvent(event);
-    setSelectedDate(new Date(event.date));
+    // Convert UTC date to Brasília timezone
+    const eventDateObj = new Date(event.date);
+    const brasiliaEventTime = utcToBrasilia(eventDateObj);
+    const dateObj = new Date(brasiliaEventTime.year, brasiliaEventTime.month - 1, brasiliaEventTime.day);
+    setSelectedDate(dateObj);
     setIsModalOpen(true);
   }
 
   const getEventsForDay = (date: Date) => {
     return events.filter(e => {
-      const eDate = new Date(e.date);
-      return eDate.getDate() === date.getDate() && 
-             eDate.getMonth() === date.getMonth() && 
-             eDate.getFullYear() === date.getFullYear();
+      // Convert the stored UTC date to Brasília timezone for comparison
+      const eventDateObj = new Date(e.date);
+      const brasiliaEventTime = utcToBrasilia(eventDateObj);
+      
+      // Compare dates in Brasília timezone
+      return brasiliaEventTime.day === date.getDate() && 
+             brasiliaEventTime.month === date.getMonth() + 1 && 
+             brasiliaEventTime.year === date.getFullYear();
     });
   };
 

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Loader2, Trash2, Calendar as CalIcon } from "lucide-react";
 import { createEventAction, deleteEventAction } from "@/app/actions";
+import { utcToBrasilia } from "@/lib/timezone";
 
 interface EventModalProps {
   isOpen: boolean;
@@ -15,8 +16,28 @@ interface EventModalProps {
 export default function EventModal({ isOpen, onClose, selectedDate, event, clients }: EventModalProps) {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [eventDate, setEventDate] = useState<string>("");
+  const [eventTime, setEventTime] = useState<string>("");
 
-  if (!isOpen) return null;
+  // Initialize date and time when modal opens or event changes
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (event?.date) {
+      // Convert UTC date from database to Brasília time
+      const eventDateObj = new Date(event.date);
+      const brasiliaTime = utcToBrasilia(eventDateObj);
+      setEventDate(brasiliaTime.dateStr);
+      setEventTime(brasiliaTime.timeStr);
+    } else if (selectedDate) {
+      // For new events, use the selected date
+      const brasiliaTime = utcToBrasilia(selectedDate);
+      setEventDate(brasiliaTime.dateStr);
+      setEventTime("09:00");
+    }
+  }, [isOpen, event, selectedDate]);
+
+  if (!isOpen) return <></>;
 
   async function handleSubmit(eventForm: React.FormEvent<HTMLFormElement>) {
     eventForm.preventDefault();
@@ -89,28 +110,30 @@ export default function EventModal({ isOpen, onClose, selectedDate, event, clien
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-5">
-            <div className="space-y-2">
-              <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Data</label>
-              <input 
-                name="date" 
-                type="date"
-                defaultValue={selectedDate ? selectedDate.toISOString().split('T')[0] : event?.date?.split('T')[0]} 
-                required 
-                className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium appearance-none text-sm"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Horário</label>
-              <input 
-                name="time" 
-                type="time"
-                defaultValue={event?.date ? new Date(event.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', hour12: false }) : "09:00"} 
-                required 
-                className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium appearance-none text-sm"
-              />
-            </div>
-          </div>
+           <div className="grid grid-cols-2 gap-5">
+             <div className="space-y-2">
+               <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Data</label>
+               <input 
+                 name="date" 
+                 type="date"
+                 value={eventDate}
+                 onChange={(e) => setEventDate(e.target.value)}
+                 required 
+                 className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium appearance-none text-sm"
+               />
+             </div>
+             <div className="space-y-2">
+               <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Horário</label>
+               <input 
+                 name="time" 
+                 type="time"
+                 value={eventTime}
+                 onChange={(e) => setEventTime(e.target.value)}
+                 required 
+                 className="w-full h-12 bg-background border border-border rounded-2xl px-5 text-foreground focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium appearance-none text-sm"
+               />
+             </div>
+           </div>
 
           <div className="space-y-2">
             <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Tipo de Compromisso</label>
