@@ -57,8 +57,8 @@ export function PrivacyValue({ value, prefix = "R$ " }: { value: number | string
 
   if (isPrivate) {
     return (
-      <span className="font-mono bg-white/10 blur-[4px] select-none rounded px-1 group-hover:blur-none transition-all">
-        {prefix} ••••
+      <span className="font-medium tracking-tighter opacity-60">
+        {prefix}••••
       </span>
     );
   }
