@@ -5,7 +5,7 @@ import { PlusCircle, FileText, ExternalLink, Calendar, Search, Edit2, Briefcase,
 import Link from "next/link";
 import { Badge } from "@/components/ui/components";
 import ProposalModal from "@/components/ProposalModal";
-import { PrivacyValue } from "@/components/PrivacyToggle";
+import { SafePrivacyValue } from "@/components/SafePrivacyValue";
 
 interface PropostasGridProps {
   proposals: any[];
@@ -116,9 +116,9 @@ export default function PropostasGrid({ proposals, clients }: PropostasGridProps
             <div className="mt-auto pt-6 space-y-5 border-t border-border/40">
                <div className="flex items-center justify-between">
                   <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground opacity-60">Investimento</span>
-                  <div className="text-xl font-light text-foreground tracking-tight">
-                    <PrivacyValue value={proposal.value} />
-                  </div>
+                   <div className="text-xl font-light text-foreground tracking-tight">
+                     <SafePrivacyValue value={proposal.value} />
+                   </div>
                </div>
                <div className="flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.2em]">
                   <div className="flex items-center gap-2 text-muted-foreground opacity-60">
