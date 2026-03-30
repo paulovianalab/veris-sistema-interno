@@ -50,10 +50,20 @@ export function PrivacyToggle() {
 }
 
 export function PrivacyValue({ value, prefix = "R$ " }: { value: number | string, prefix?: string }) {
+  // Fallback component that doesn't depend on context
+  // This prevents React errors when context is not available
   try {
     const { isPrivate } = useContext(PrivacyContext);
     
+    if (typeof value === 'number' && isNaN(value)) {
+      return <span>{prefix}0.00</span>;
+    }
+    
     const numValue = typeof value === "string" ? parseFloat(value) : value;
+    if (isNaN(numValue)) {
+      return <span>{prefix}0.00</span>;
+    }
+    
     const formatted = numValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
     if (isPrivate) {
@@ -67,7 +77,15 @@ export function PrivacyValue({ value, prefix = "R$ " }: { value: number | string
     return <span>{prefix}{formatted}</span>;
   } catch (error) {
     // Fallback if context is not available
+    if (typeof value === 'number' && isNaN(value)) {
+      return <span>{prefix}0.00</span>;
+    }
+    
     const numValue = typeof value === "string" ? parseFloat(value) : value;
+    if (isNaN(numValue)) {
+      return <span>{prefix}0.00</span>;
+    }
+    
     const formatted = numValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
     return <span>{prefix}{formatted}</span>;
   }

@@ -13,14 +13,19 @@ interface PropostasGridProps {
 }
 
 export default function PropostasGrid({ proposals, clients }: PropostasGridProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProposal, setEditingProposal] = useState<any | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
+   const [isModalOpen, setIsModalOpen] = useState(false);
+   const [editingProposal, setEditingProposal] = useState<any | null>(null);
+   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredProposals = proposals.filter(p => 
-    p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (p.client?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
-  );
+   // Ensure proposals is always an array
+   const safeProposals = Array.isArray(proposals) ? proposals : [];
+
+   const filteredProposals = safeProposals.filter(p => 
+     p && p.title && (
+       p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+       (p.client?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+     )
+   );
 
   function openNewModal() {
     setEditingProposal(null);
@@ -71,14 +76,17 @@ export default function PropostasGrid({ proposals, clients }: PropostasGridProps
         </div>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {filteredProposals.length === 0 && (
-          <div className="col-span-full py-32 text-center rounded-[2.5rem] border-2 border-dashed border-border bg-muted/5">
-            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.3em] italic opacity-40">Nenhuma proposta encontrada...</p>
-          </div>
-        )}
-        {filteredProposals.map(proposal => (
-          <div key={proposal.id} className="group relative flex flex-col gap-6 rounded-[2.5rem] border border-border bg-card p-8 hover:border-primary/30 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1">
+       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+         {filteredProposals.length === 0 && (
+           <div className="col-span-full py-32 text-center rounded-[2.5rem] border-2 border-dashed border-border bg-muted/5">
+             <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.3em] italic opacity-40">Nenhuma proposta encontrada...</p>
+           </div>
+         )}
+         {filteredProposals.map((proposal) => {
+           if (!proposal || !proposal.id) return null;
+           
+           return (
+           <div key={proposal.id} className="group relative flex flex-col gap-6 rounded-[2.5rem] border border-border bg-card p-8 hover:border-primary/30 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1">
             <div className="flex items-center justify-between">
               <div className="p-4 rounded-[1.25rem] bg-muted/50 text-primary border border-border/50 transition-all duration-500 group-hover:bg-primary group-hover:text-white group-hover:shadow-lg group-hover:shadow-primary/20">
                 <FileText className="h-6 w-6" />
@@ -142,8 +150,9 @@ export default function PropostasGrid({ proposals, clients }: PropostasGridProps
                </div>
             </div>
           </div>
-        ))}
-      </div>
+           );
+         })}
+       </div>
 
       <ProposalModal 
         isOpen={isModalOpen} 
