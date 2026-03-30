@@ -26,13 +26,13 @@ export function Sidebar({ name = "Veris Digital" }: { name?: string }) {
         <div className="flex h-20 items-center px-6 border-b border-border/40">
           <Link href="/" className="flex items-center">
             <img src="/logo-veris.png" alt="Veris" className="h-7 w-auto object-contain dark:brightness-200" />
-            <span className="ml-2.5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-50">
+            <span className="ml-2.5 text-[9px] font-medium uppercase tracking-[0.2em] text-muted-foreground opacity-50">
               Internal
             </span>
           </Link>
         </div>
         <div className="flex-1 overflow-y-auto py-8">
-          <nav className="grid items-start px-3 text-sm font-bold space-y-1">
+          <nav className="grid items-start px-3 text-sm font-medium space-y-1">
             {links.map((link) => {
               const Icon = link.icon;
               const isActive = pathname === link.href;
@@ -72,11 +72,11 @@ export function Sidebar({ name = "Veris Digital" }: { name?: string }) {
 
         <div className="flex items-center justify-between px-3 py-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-border/50 transition-all">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="h-9 w-9 bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl flex items-center justify-center font-black text-xs shrink-0">
+            <div className="h-9 w-9 bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl flex items-center justify-center font-medium text-xs shrink-0">
               {name.charAt(0)}
             </div>
             <div className="flex flex-col overflow-hidden">
-              <p className="text-[10px] font-black text-foreground uppercase tracking-wider truncate">{name}</p>
+              <p className="text-[10px] font-medium text-foreground uppercase tracking-wider truncate">{name}</p>
               <p className="text-[9px] text-muted-foreground font-medium truncate">Administrator</p>
             </div>
           </div>
@@ -116,7 +116,7 @@ export function MobileNav() {
             )}
           >
             <Icon className="h-5 w-5 mb-1" strokeWidth={isActive ? 2.5 : 2} />
-            <span className="text-[8px] font-bold uppercase tracking-widest">{link.name}</span>
+            <span className="text-[8px] font-medium uppercase tracking-widest">{link.name}</span>
           </Link>
         );
       })}

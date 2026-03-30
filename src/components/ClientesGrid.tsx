@@ -49,14 +49,14 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
     <div className="space-y-10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-border pb-8">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-foreground">Clientes & CRM</h1>
-          <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-2 flex items-center gap-2">
+          <h1 className="text-3xl font-light tracking-tight text-foreground">Clientes & CRM</h1>
+          <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-2 flex items-center gap-2">
             <Users className="h-3 w-3 text-primary" /> {filteredClients.length} Clientes Filtrados
           </p>
         </div>
         <button 
           onClick={openNewModal}
-          className="inline-flex items-center justify-center rounded-xl bg-primary text-white h-11 px-6 text-sm font-black hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20"
+          className="inline-flex items-center justify-center rounded-xl bg-primary text-white h-11 px-6 text-sm font-medium hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20"
         >
           <PlusCircle className="mr-2 h-4 w-4" /> Novo Registro
         </button>
@@ -68,7 +68,7 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
             <Link 
               key={tab} 
               href={`/clientes?filter=${tab}`}
-              className={`px-4 py-2 rounded-lg text-[11px] font-black uppercase tracking-wider transition-all ${
+              className={`px-4 py-2 rounded-lg text-[11px] font-medium uppercase tracking-wider transition-all ${
                 filter === tab 
                   ? "bg-white dark:bg-slate-800 text-primary shadow-sm" 
                   : "text-slate-500 hover:text-foreground"
@@ -99,7 +99,7 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
         )}
         
         {/* Table Headers (Hidden on Mobile) */}
-        <div className="hidden lg:grid grid-cols-12 px-8 py-4 bg-muted/30 rounded-xl border border-border/40 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+        <div className="hidden lg:grid grid-cols-12 px-8 py-4 bg-muted/30 rounded-xl border border-border/40 text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
            <div className="col-span-4">Cliente / Empresa</div>
            <div className="col-span-2">Contato Principal</div>
            <div className="col-span-2">Fee Mensal</div>
@@ -111,21 +111,21 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
           {filteredClients.map(client => (
             <div key={client.id} className="premium-card lg:grid grid-cols-12 flex flex-col p-6 lg:p-0 lg:h-20 items-center px-8 hover:border-primary/40 transition-all group animate-in fade-in duration-300">
               <div className="col-span-4 flex items-center gap-4 w-full">
-                <div className="h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 font-black text-sm border border-border/50">
+                <div className="h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 font-medium text-sm border border-border/50">
                   {client.company?.[0]?.toUpperCase() || client.name[0].toUpperCase()}
                 </div>
                 <div className="flex flex-col truncate">
-                  <span className="font-black text-foreground text-[14px] leading-tight mb-0.5 truncate tracking-tight">{client.company || client.name}</span>
-                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider opacity-60">ID: {client.id.slice(-6)}</span>
+                  <span className="font-medium text-foreground text-[14px] leading-tight mb-0.5 truncate tracking-tight">{client.company || client.name}</span>
+                  <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider opacity-60">ID: {client.id.slice(-6)}</span>
                 </div>
               </div>
 
               <div className="col-span-2 hidden lg:flex flex-col justify-center">
-                <span className="text-[13px] font-bold text-slate-600 dark:text-slate-400">{client.name}</span>
+                <span className="text-[13px] font-medium text-slate-600 dark:text-slate-400">{client.name}</span>
               </div>
 
               <div className="col-span-2 hidden lg:flex flex-col justify-center">
-                <span className="text-[14px] font-black text-foreground tracking-tight">R$ {client.monthlyValue.toLocaleString('pt-BR')}</span>
+                <span className="text-[14px] font-light text-foreground tracking-tight">R$ {client.monthlyValue.toLocaleString('pt-BR')}</span>
               </div>
 
               <div className="col-span-2 hidden lg:flex items-center">
@@ -136,7 +136,7 @@ export default function ClientesGrid({ clients, filter }: ClientesGridProps) {
                 {/* Mobile View Indicators */}
                 <div className="lg:hidden space-y-2">
                    <div className="flex items-center gap-2">{getStatusBadge(client.type)}</div>
-                   <div className="text-xl font-black text-primary">R$ {client.monthlyValue.toLocaleString('pt-BR')}</div>
+                   <div className="text-xl font-light text-primary">R$ {client.monthlyValue.toLocaleString('pt-BR')}</div>
                 </div>
 
                 <div className="flex items-center gap-2">
