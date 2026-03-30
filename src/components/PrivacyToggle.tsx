@@ -50,18 +50,25 @@ export function PrivacyToggle() {
 }
 
 export function PrivacyValue({ value, prefix = "R$ " }: { value: number | string, prefix?: string }) {
-  const { isPrivate } = useContext(PrivacyContext);
-  
-  const numValue = typeof value === "string" ? parseFloat(value) : value;
-  const formatted = numValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+  try {
+    const { isPrivate } = useContext(PrivacyContext);
+    
+    const numValue = typeof value === "string" ? parseFloat(value) : value;
+    const formatted = numValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
-  if (isPrivate) {
-    return (
-      <span className="font-medium tracking-tighter opacity-60">
-        {prefix}••••
-      </span>
-    );
+    if (isPrivate) {
+      return (
+        <span className="font-medium tracking-tighter opacity-60">
+          {prefix}••••
+        </span>
+      );
+    }
+
+    return <span>{prefix}{formatted}</span>;
+  } catch (error) {
+    // Fallback if context is not available
+    const numValue = typeof value === "string" ? parseFloat(value) : value;
+    const formatted = numValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    return <span>{prefix}{formatted}</span>;
   }
-
-  return <span>{prefix}{formatted}</span>;
 }
