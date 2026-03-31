@@ -8,6 +8,7 @@ import {
   MousePointer2, 
   Calendar,
   Layers,
+  CheckCircle,
   LucideIcon
 } from "lucide-react";
 
@@ -18,6 +19,9 @@ export interface ServiceDetail {
   benefits: string[];
   investment?: string;
   period?: string;
+  extendedFeatures?: { title: string; desc: string }[];
+  flow?: { step: string; icon: LucideIcon }[];
+  integrations?: string[];
 }
 
 export const servicesData: Record<string, ServiceDetail> = {
@@ -26,6 +30,18 @@ export const servicesData: Record<string, ServiceDetail> = {
     scope: "Atendimento 24/7, IA Treinada no modelo da empresa, Qualificação de Leads.",
     icon: Zap,
     benefits: ["Atendimento 24/7 Humanizado", "Qualificação de Leads Automática", "Integração Direta com CRM"],
+    extendedFeatures: [
+      { title: "Construção Visual", desc: "IA constrói seus fluxos em minutos." },
+      { title: "Métricas Reais", desc: "Controle de CTR e conversão em tempo real." },
+      { title: "Conexão Nativa", desc: "RD Station, HubSpot, Shopify e +50 apps." }
+    ],
+    flow: [
+      { step: "Novo Lead no WhatsApp", icon: Target },
+      { step: "Análise com IA", icon: MousePointer2 },
+      { step: "A IA conduz a conversa", icon: Zap },
+      { step: "Fechando o negócio", icon: CheckCircle }
+    ],
+    integrations: ["RD Station", "HubSpot", "Shopify", "Gemini IA", "WhatsApp API"],
     investment: "R$ 300 / mensal",
     period: "Imediato"
   },

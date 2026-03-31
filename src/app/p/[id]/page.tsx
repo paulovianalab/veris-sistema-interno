@@ -72,7 +72,7 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
 
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.toLowerCase() === "veris2026") {
+    if (password.toLowerCase() === "veris26") {
       setUnlocked(true);
       setError("");
     } else {
@@ -227,35 +227,91 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
                                         transition={{ delay: idx * 0.1 }}
                                         className="group bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 md:p-12 hover:bg-white/[0.04] transition-all duration-500 hover:border-white/10"
                                     >
-                                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-12">
-                                            <div className="space-y-8 flex-1">
-                                                <div className="flex items-center gap-5">
-                                                    <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 text-primary group-hover:scale-110 transition-transform duration-500">
-                                                        <service.icon className="h-6 w-6" />
-                                                    </div>
-                                                    <h3 className="text-2xl font-light tracking-tight text-white">{service.label}</h3>
-                                                </div>
-                                                
-                                                <div className="space-y-4">
-                                                    {service.benefits.map((benefit, bIdx) => (
-                                                        <div key={bIdx} className="flex items-center gap-3 text-xs text-muted-foreground/60 font-light">
-                                                            <div className="h-1 w-1 bg-primary rounded-full shrink-0" />
-                                                            {benefit}
+                                        <div className="flex flex-col gap-12">
+                                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-12">
+                                                <div className="space-y-8 flex-1">
+                                                    <div className="flex items-center gap-5">
+                                                        <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 text-primary group-hover:scale-110 transition-transform duration-500">
+                                                            <service.icon className="h-6 w-6" />
                                                         </div>
-                                                    ))}
+                                                        <h3 className="text-2xl font-light tracking-tight text-white">{service.label}</h3>
+                                                    </div>
+                                                    
+                                                    <div className="space-y-4">
+                                                        {service.benefits.map((benefit, bIdx) => (
+                                                            <div key={bIdx} className="flex items-center gap-3 text-xs text-muted-foreground/60 font-light">
+                                                                <div className="h-1 w-1 bg-primary rounded-full shrink-0" />
+                                                                {benefit}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                <div className="md:text-right space-y-6 md:border-l md:border-white/5 md:pl-12 min-w-[200px]">
+                                                    <div className="space-y-1">
+                                                        <span className="text-[10px] text-primary uppercase tracking-widest font-black opacity-30">Prazos</span>
+                                                        <p className="text-sm text-white italic font-light">{service.period}</p>
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <span className="text-[10px] text-primary uppercase tracking-widest font-black opacity-30">Nota Técnica</span>
+                                                        <p className="text-[10px] text-muted-foreground/40 leading-relaxed uppercase tracking-tighter">Detalhamento via onboarding</p>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <div className="md:text-right space-y-6 md:border-l md:border-white/5 md:pl-12 min-w-[200px]">
-                                                <div className="space-y-1">
-                                                    <span className="text-[10px] text-primary uppercase tracking-widest font-black opacity-30">Prazos</span>
-                                                    <p className="text-sm text-white italic font-light">{service.period}</p>
+                                            {/* Specialized IA Content */}
+                                            {key === 'ia' && (
+                                                <div className="space-y-12 pt-8 border-t border-white/5">
+                                                    {/* Infographic Image */}
+                                                    <div className="rounded-3xl overflow-hidden border border-white/5 bg-black/40">
+                                                        <img src="/chatbot-flow.png" alt="Fluxo de Chatbot" className="w-full h-auto opacity-80 group-hover:opacity-100 transition-opacity duration-1000" />
+                                                    </div>
+
+                                                    <div className="grid md:grid-cols-2 gap-12">
+                                                        {/* Feature Shapes */}
+                                                        <div className="space-y-6">
+                                                            <h4 className="text-[10px] text-primary uppercase tracking-[0.4em] font-black opacity-40">Estrutura de IA</h4>
+                                                            <div className="grid gap-4">
+                                                                {((service as any).extendedFeatures || []).map((feat: any, fIdx: number) => (
+                                                                    <div key={fIdx} className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 space-y-2">
+                                                                        <div className="text-xs font-bold text-white uppercase tracking-widest">{feat.title}</div>
+                                                                        <div className="text-[10px] text-muted-foreground/40 leading-relaxed">{feat.desc}</div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Visual Flowchart */}
+                                                        <div className="space-y-8">
+                                                            <h4 className="text-[10px] text-primary uppercase tracking-[0.4em] font-black opacity-40">Caminho do Lead</h4>
+                                                            <div className="relative space-y-6 pl-8">
+                                                                <div className="absolute left-3 top-2 bottom-2 w-px bg-gradient-to-b from-primary via-primary/20 to-transparent" />
+                                                                {((service as any).flow || []).map((step: any, sIdx: number) => (
+                                                                    <div key={sIdx} className="relative flex items-center gap-4">
+                                                                        <div className="absolute -left-[25px] h-3 w-3 rounded-full bg-primary border-4 border-[#020202]" />
+                                                                        <div className="flex items-center gap-3 text-xs text-white/60 font-light">
+                                                                            <step.icon className="h-4 w-4 text-primary/40 shrink-0" />
+                                                                            {step.step}
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Integrations */}
+                                                    <div className="pt-4 space-y-6">
+                                                        <h4 className="text-[10px] text-primary uppercase tracking-[0.4em] font-black opacity-40">Integrações Nativas</h4>
+                                                        <div className="flex flex-wrap gap-3">
+                                                            {((service as any).integrations || []).map((int: string, iIdx: number) => (
+                                                                <span key={iIdx} className="px-4 py-2 rounded-full bg-white/5 border border-white/5 text-[9px] text-muted-foreground uppercase tracking-widest font-bold">
+                                                                    {int}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="space-y-1">
-                                                    <span className="text-[10px] text-primary uppercase tracking-widest font-black opacity-30">Nota Técnica</span>
-                                                    <p className="text-[10px] text-muted-foreground/40 leading-relaxed uppercase tracking-tighter">Detalhamento via onboarding</p>
-                                                </div>
-                                            </div>
+                                            )}
                                         </div>
                                     </motion.div>
                                 );
