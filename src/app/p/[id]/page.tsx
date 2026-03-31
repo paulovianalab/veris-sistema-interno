@@ -359,8 +359,8 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
                                 
                                 <div className="h-px w-24 bg-black/10 my-4" />
                                 
-                                <p className="text-xs text-black/50 leading-relaxed font-medium max-w-[280px]">
-                                    Valor único ou parcelado conforme condições de fechamento. Condição válida por 7 dias corridos.
+                                <p className="text-xs text-black/50 leading-relaxed font-medium max-w-sm mx-auto">
+                                    Valor único ou parcelado conforme condições de fechamento. <br className="hidden md:block" /> Condição válida por 7 dias corridos.
                                 </p>
                             </div>
                          </div>
