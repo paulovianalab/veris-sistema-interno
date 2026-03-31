@@ -262,11 +262,6 @@ export default function ProposalPublicPage({ params }: { params: Promise<{ id: s
                                             {/* Specialized IA Content */}
                                             {key === 'ia' && (
                                                 <div className="space-y-12 pt-8 border-t border-white/5">
-                                                    {/* Infographic Image */}
-                                                    <div className="rounded-3xl overflow-hidden border border-white/5 bg-black/40">
-                                                        <img src="/chatbot-flow.png" alt="Fluxo de Chatbot" className="w-full h-auto opacity-80 group-hover:opacity-100 transition-opacity duration-1000" />
-                                                    </div>
-
                                                     <div className="grid md:grid-cols-2 gap-12">
                                                         {/* Feature Shapes */}
                                                         <div className="space-y-6">
