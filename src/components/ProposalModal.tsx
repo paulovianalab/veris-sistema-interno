@@ -62,12 +62,47 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
    const generateScope = useMemo(() => {
      if (selectedServices.length === 0) return "";
      
-     const selectedTexts = selectedServices.map((serviceKey) => {
+     const benefitSections: string[] = [];
+     const investmentSections: string[] = [];
+
+     selectedServices.forEach((serviceKey) => {
        const service = servicesData[serviceKey as keyof typeof servicesData];
-       return service?.scope || "";
+       if (!service) return;
+
+       const content = service.scope;
+       const splitKeywords = ["Investimento:", "Mensalidade:", "Prazo:", "Entrega:"];
+       
+       let splitIndex = -1;
+
+       for (const keyword of splitKeywords) {
+         const idx = content.indexOf(keyword);
+         if (idx !== -1 && (splitIndex === -1 || idx < splitIndex)) {
+           splitIndex = idx;
+         }
+       }
+
+       if (splitIndex !== -1) {
+         const benefits = content.substring(0, splitIndex).trim();
+         const details = content.substring(splitIndex).trim();
+         
+         if (benefits) benefitSections.push(benefits.replace(/\.$/, ""));
+         if (details) investmentSections.push(details);
+       } else {
+         benefitSections.push(content);
+       }
      });
 
-     return selectedTexts.join("\n\n");
+     let finalContent = "";
+     if (benefitSections.length > 0) {
+       finalContent += "### Entregáveis & Benefícios\n";
+       finalContent += benefitSections.join("\n\n") + "\n\n";
+     }
+     if (investmentSections.length > 0) {
+       finalContent += "### Investimento & Prazos\n";
+       finalContent += investmentSections.join("\n\n");
+     }
+
+     return finalContent.trim();
    }, [selectedServices]);
 
   const toggleService = (serviceKey: string) => {
@@ -194,32 +229,18 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
              )}
            </div>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-             <div className="space-y-2.5">
-               <label className="text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Status de Negociação</label>
-               <select 
-                 name="status" 
-                 defaultValue={proposal?.status || "Enviada"} 
-                 className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none font-medium appearance-none cursor-pointer"
-               >
-                 <option value="Enviada">Aguardando Envio</option>
-                 <option value="Em Aberto">Em Aberto</option>
-                 <option value="Aprovada">Contrato Fechado</option>
-                 <option value="Recusada">Recusada</option>
-               </select>
-             </div>
-             <div className="space-y-2.5">
-               <label className="text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Link Externo (PDF/Doc) - Opcional</label>
-               <div className="relative">
-                 <LinkIcon className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                 <input 
-                   name="link" 
-                   defaultValue={proposal?.link} 
-                   placeholder="https://sua-proposta.pdf"
-                   className="w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-4 sm:pr-5 bg-background border border-border rounded-2xl text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium text-[11px] sm:text-xs truncate italic"
-                 />
-               </div>
-             </div>
+           <div className="space-y-2.5">
+             <label className="text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground ml-1">Status de Negociação</label>
+             <select 
+               name="status" 
+               defaultValue={proposal?.status || "Enviada"} 
+               className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none font-medium appearance-none cursor-pointer"
+             >
+               <option value="Enviada">Aguardando Envio</option>
+               <option value="Em Aberto">Em Aberto</option>
+               <option value="Aprovada">Contrato Fechado</option>
+               <option value="Recusada">Recusada</option>
+             </select>
            </div>
 
            {error && <p className="text-xs sm:text-sm text-rose-500 bg-rose-500/10 p-3 sm:p-4 rounded-2xl border border-rose-500/20 font-medium tracking-tight">{error}</p>}
