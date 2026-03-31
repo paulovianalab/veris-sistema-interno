@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { X, Loader2, Trash2, Link as LinkIcon, FileText } from "lucide-react";
+import { X, Loader2, Trash2, FileText } from "lucide-react";
 import { createProposalAction, updateProposalAction, deleteProposalAction } from "@/app/actions";
+import { servicesData } from "@/lib/constants";
 
 interface ProposalModalProps {
   isOpen: boolean;
@@ -11,99 +12,56 @@ interface ProposalModalProps {
   clients: { id: string, name: string, company?: string | null }[];
 }
 
-const servicesData = {
-  ia: {
-    label: "IA de Atendimento",
-    scope: "Atendimento 24/7, IA Treinada no modelo da empresa, Qualificação de Leads. Investimento: Implementação + Mensalidade R$ 300."
-  },
-  ecommerce: {
-    label: "E-commerce",
-    scope: "Design de Banners, Gestão de Catálogo, Ecossistema de Pagamentos e Logística. Prazo: 20 dias úteis. Mensalidade plataforma: a partir de R$ 69."
-  },
-  social: {
-    label: "Social Media & Tráfego",
-    scope: "Gestão de 12 posts (4 vídeos) + Tráfego Estratégico em Meta e Google focado em performance."
-  },
-  site: {
-    label: "Site",
-    scope: "Design Premium focado em conversão. Entrega a partir de 5 dias. Exemplos: Agência Seu Destino, Cookiery, Souza Jr Adv."
-  },
-  branding: {
-    label: "Branding",
-    scope: "Estratégia de marca, Identidade Visual completa (Logo, Cores, Tipografia) e Manual da Marca. Entrega em arquivos PNG, PDF e Vetoriais."
-  }
-};
-
 export default function ProposalModal({ isOpen, onClose, proposal, clients }: ProposalModalProps) {
-   // CRITICAL FIX: Check isOpen BEFORE calling any hooks
-   if (!isOpen) {
-     return null;
-   }
+    if (!isOpen) return null;
 
-   // NOW we can safely call hooks - they will always be called in the same order
-   const [isPending, setIsPending] = useState(false);
-   const [error, setError] = useState<string | null>(null);
-   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+    const [isPending, setIsPending] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-   // Initialize services only when modal opens with a proposal
-   useEffect(() => {
-     if (proposal?.selectedServices) {
-       try {
-         const parsed = JSON.parse(proposal.selectedServices);
-         setSelectedServices(Array.isArray(parsed) ? parsed : []);
-       } catch {
-         setSelectedServices([]);
-       }
-     } else {
-       setSelectedServices([]);
-     }
-   }, [proposal]);
+    useEffect(() => {
+      if (proposal?.selectedServices) {
+        try {
+          const parsed = JSON.parse(proposal.selectedServices);
+          setSelectedServices(Array.isArray(parsed) ? parsed : []);
+        } catch {
+          setSelectedServices([]);
+        }
+      } else {
+        setSelectedServices([]);
+      }
+    }, [proposal]);
 
-   const generateScope = useMemo(() => {
-     if (selectedServices.length === 0) return "";
-     
-     const benefitSections: string[] = [];
-     const investmentSections: string[] = [];
+    const generateScope = useMemo(() => {
+      if (selectedServices.length === 0) return "";
+      
+      const benefitSections: string[] = [];
+      const investmentSections: string[] = [];
 
-     selectedServices.forEach((serviceKey) => {
-       const service = servicesData[serviceKey as keyof typeof servicesData];
-       if (!service) return;
+      selectedServices.forEach((serviceKey) => {
+        const service = servicesData[serviceKey as keyof typeof servicesData];
+        if (!service) return;
 
-       const content = service.scope;
-       const splitKeywords = ["Investimento:", "Mensalidade:", "Prazo:", "Entrega:"];
-       
-       let splitIndex = -1;
+        if (service.benefits.length > 0) {
+          benefitSections.push(`${service.label}: ${service.benefits.join(", ")}`);
+        }
+        if (service.investment) {
+          investmentSections.push(`${service.label}: ${service.investment}`);
+        }
+      });
 
-       for (const keyword of splitKeywords) {
-         const idx = content.indexOf(keyword);
-         if (idx !== -1 && (splitIndex === -1 || idx < splitIndex)) {
-           splitIndex = idx;
-         }
-       }
+      let finalContent = "";
+      if (benefitSections.length > 0) {
+        finalContent += "### Entregáveis & Benefícios\n";
+        finalContent += benefitSections.join("\n\n") + "\n\n";
+      }
+      if (investmentSections.length > 0) {
+        finalContent += "### Investimento & Prazos\n";
+        finalContent += investmentSections.join("\n\n");
+      }
 
-       if (splitIndex !== -1) {
-         const benefits = content.substring(0, splitIndex).trim();
-         const details = content.substring(splitIndex).trim();
-         
-         if (benefits) benefitSections.push(benefits.replace(/\.$/, ""));
-         if (details) investmentSections.push(details);
-       } else {
-         benefitSections.push(content);
-       }
-     });
-
-     let finalContent = "";
-     if (benefitSections.length > 0) {
-       finalContent += "### Entregáveis & Benefícios\n";
-       finalContent += benefitSections.join("\n\n") + "\n\n";
-     }
-     if (investmentSections.length > 0) {
-       finalContent += "### Investimento & Prazos\n";
-       finalContent += investmentSections.join("\n\n");
-     }
-
-     return finalContent.trim();
-   }, [selectedServices]);
+      return finalContent.trim();
+    }, [selectedServices]);
 
   const toggleService = (serviceKey: string) => {
     setSelectedServices((prev) =>
@@ -150,7 +108,7 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
   }
 
    return (
-     <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+     <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 text-foreground">
        <div className="bg-card border border-border w-full max-w-sm sm:max-w-md lg:max-w-lg h-screen sm:h-auto sm:max-h-[90vh] rounded-[2rem] shadow-2xl overflow-y-auto sm:overflow-visible animate-in zoom-in-95 duration-200 flex flex-col">
          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border bg-muted/10 flex-shrink-0">
            <h2 className="text-lg sm:text-xl font-light text-foreground flex items-center gap-2 sm:gap-3">
@@ -169,7 +127,7 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
                defaultValue={proposal?.title} 
                required 
                placeholder="Ex: Consultoria de Performance 2026"
-               className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium placeholder:text-muted-foreground/30"
+               className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium placeholder:text-muted-foreground/30 dark:bg-slate-900"
              />
            </div>
 
@@ -180,7 +138,7 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
                  name="clientId" 
                  defaultValue={proposal?.clientId || ""} 
                  required
-                 className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none font-medium appearance-none cursor-pointer"
+                 className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none font-medium appearance-none cursor-pointer dark:bg-slate-900"
                >
                  <option value="" disabled>Selecione o Cliente</option>
                  {clients.map(client => (
@@ -197,7 +155,7 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
                  type="number" 
                  step="0.01" 
                  defaultValue={proposal?.value || 0} 
-                 className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium"
+                 className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none transition-all font-medium dark:bg-slate-900"
                />
              </div>
            </div>
@@ -234,7 +192,7 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
              <select 
                name="status" 
                defaultValue={proposal?.status || "Enviada"} 
-               className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none font-medium appearance-none cursor-pointer"
+               className="w-full h-10 sm:h-12 bg-background border border-border rounded-2xl px-4 sm:px-5 text-foreground text-sm sm:text-base focus:ring-2 focus:ring-primary/50 outline-none font-medium appearance-none cursor-pointer dark:bg-slate-900"
              >
                <option value="Enviada">Aguardando Envio</option>
                <option value="Em Aberto">Em Aberto</option>
@@ -270,12 +228,12 @@ export default function ProposalModal({ isOpen, onClose, proposal, clients }: Pr
                  disabled={isPending}
                  className="flex-1 sm:min-w-[160px] bg-primary text-white h-10 sm:h-12 px-6 sm:px-8 rounded-2xl font-medium hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 sm:gap-3 shadow-xl shadow-primary/20 text-[11px] sm:text-xs uppercase tracking-widest"
                >
-                 {isPending ? <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin text-white" /> : (proposal ? "Salvar Proposta" : "Emitir Proposta")}
+                 {isPending ? <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin text-white" /> : (proposal ? "Salvar" : "Criar")}
                </button>
              </div>
            </div>
         </form>
-      </div>
-    </div>
-  );
+       </div>
+     </div>
+   );
 }

@@ -87,13 +87,26 @@ export async function updateProposalAction(id: string, formData: FormData) {
   return { success: true };
 }
 
-export async function acceptProposalAction(proposalId: string) {
-  await prisma.proposal.update({
+export async function acceptProposalAction(proposalId: string, paymentMethod?: string) {
+  const proposal = await prisma.proposal.update({
     where: { id: proposalId },
     data: {
       status: "Aprovada",
       acceptedAt: new Date(),
+      paymentMethod,
     },
+    include: { client: true }
+  });
+
+  // Create a notification task for the agency
+  await prisma.task.create({
+    data: {
+      title: `Contrato Fechado: ${(proposal as any).client?.company || (proposal as any).client?.name || proposal.title} (${paymentMethod})`,
+      priority: "Alta",
+      status: "Pendente",
+      date: new Date(),
+      clientId: proposal.clientId,
+    }
   });
 
   revalidatePath("/propostas");

@@ -2,9 +2,7 @@
 
 import { useActionState } from "react";
 import { loginAction } from "@/app/actions";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/components";
-import { Lock, Mail, ShieldCheck } from "lucide-react";
+import { Lock, Mail } from "lucide-react";
 
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(async (prevState: any, formData: FormData) => {
@@ -12,75 +10,62 @@ export default function LoginPage() {
   }, null);
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 px-4">
-      <div className="mb-12 flex flex-col items-center">
-        <img src="/logo-veris.png" alt="Veris" className="h-14 w-auto object-contain dark:brightness-200" />
-        <div className="mt-6 flex items-center gap-2 bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] px-4 py-1.5 rounded-full font-medium uppercase tracking-[0.2em] border border-border/50 shadow-sm">
-          <ShieldCheck className="h-3.5 w-3.5" /> Acesso Restrito
-        </div>
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#020202] px-6">
+      <div className="mb-16">
+        <img src="/logo-veris.png" alt="Veris" className="h-12 w-auto brightness-200 grayscale" />
       </div>
       
-      <div className="w-full max-w-sm bg-card border border-border shadow-premium rounded-2xl overflow-hidden">
-        <div className="pt-10 pb-6 px-10 text-center border-b border-border/40">
-          <h1 className="text-2xl font-light text-foreground tracking-tight">Login</h1>
-          <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest mt-2">
-            Veris Agency Dash
-          </p>
+      <div className="w-full max-w-sm space-y-10">
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-light text-white tracking-tight">Dashboard Access</h1>
+          <p className="text-[10px] text-white/20 font-bold uppercase tracking-[0.4em]">Veris Digital OS &copy; 2026</p>
         </div>
-        <div className="p-10">
-          <form action={formAction} className="space-y-6">
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground ml-1">E-mail Corporativo</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-3.5 h-4 w-4 text-muted-foreground" />
-                <input 
-                  id="email" 
-                  name="email" 
-                  type="email" 
-                  placeholder="name@agency.com" 
-                  required
-                  className="w-full h-12 pl-12 pr-4 bg-background border border-border rounded-xl text-foreground focus:ring-1 focus:ring-primary outline-none transition-all font-medium placeholder:text-muted-foreground/30 text-sm"
-                />
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground ml-1">Chave de Acesso</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-3.5 h-4 w-4 text-muted-foreground" />
-                <input 
-                  id="password" 
-                  name="password" 
-                  type="password" 
-                  placeholder="••••••••"
-                  required
-                  className="w-full h-12 pl-12 pr-4 bg-background border border-border rounded-xl text-foreground focus:ring-1 focus:ring-primary outline-none transition-all font-medium placeholder:text-muted-foreground/30 text-sm"
-                />
-              </div>
+
+        <form action={formAction} className="space-y-6">
+          <div className="space-y-4">
+            <div className="relative group">
+              <Mail className="absolute left-5 top-5 h-4 w-4 text-white/10 group-focus-within:text-primary transition-colors" />
+              <input 
+                id="email" 
+                name="email" 
+                type="email" 
+                placeholder="E-mail" 
+                required
+                className="w-full h-14 pl-14 pr-6 bg-white/[0.03] border border-white/5 rounded-2xl text-white focus:ring-1 focus:ring-primary/40 outline-none transition-all font-medium placeholder:text-white/10 text-sm"
+              />
             </div>
             
-            {state?.error && (
-              <p className="text-[11px] text-rose-500 bg-rose-500/10 p-3 rounded-xl border border-rose-500/20 text-center font-medium">
-                {state.error}
-              </p>
-            )}
+            <div className="relative group">
+              <Lock className="absolute left-5 top-5 h-4 w-4 text-white/10 group-focus-within:text-primary transition-colors" />
+              <input 
+                id="password" 
+                name="password" 
+                type="password" 
+                placeholder="Senha"
+                required
+                className="w-full h-14 pl-14 pr-6 bg-white/[0.03] border border-white/5 rounded-2xl text-white focus:ring-1 focus:ring-primary/40 outline-none transition-all font-medium placeholder:text-white/10 text-sm"
+              />
+            </div>
+          </div>
+          
+          {state?.error && (
+            <p className="text-[10px] text-rose-500 bg-rose-500/5 p-4 rounded-xl border border-rose-500/10 text-center font-bold uppercase tracking-widest">
+              {state.error}
+            </p>
+          )}
 
-            <button 
-              type="submit" 
-              className="w-full h-12 bg-primary text-white rounded-xl font-medium text-sm hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center shadow-lg shadow-primary/20"
-              disabled={isPending}
-            >
-              {isPending ? "Validando..." : "Entrar no Dashboard"}
-            </button>
-          </form>
-        </div>
+          <button 
+            type="submit" 
+            className="w-full h-14 bg-white text-black rounded-2xl font-bold text-[11px] uppercase tracking-[0.2em] hover:bg-white/90 active:scale-[0.98] transition-all shadow-2xl flex items-center justify-center"
+            disabled={isPending}
+          >
+            {isPending ? "Autenticando..." : "Entrar no Sistema"}
+          </button>
+        </form>
       </div>
-      
-      <div className="mt-12 flex items-center gap-4 opacity-30 grayscale">
-         <div className="h-px w-8 bg-slate-500" />
-         <p className="text-[9px] font-medium text-slate-500 uppercase tracking-[0.3em]">
-           &copy; Veris Digital OS
-         </p>
-         <div className="h-px w-8 bg-slate-500" />
+
+      <div className="mt-24 text-[8px] font-bold text-white/10 uppercase tracking-[0.6em]">
+         Criptografado via Veris Shield
       </div>
     </div>
   );
